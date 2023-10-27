@@ -7,7 +7,7 @@ class AuthService {
   async registration(username: string, password: string) {
     const rows = await db.findUserByName(username);
     if (rows[0]) {
-      throw new Error("Exist");
+      throw new Error("User already exist");
     }
 
     return rows;

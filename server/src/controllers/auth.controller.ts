@@ -24,7 +24,7 @@ class AuthController {
       
       res.status(200).json(data);
     } catch (err) {
-      if (err.message == 'Exist') {
+      if (err.message == 'User already exist') {
         return res.status(409).json({ error: 'User with the same username already exists.' });
       }
       res.status(500).json(err);

@@ -1,10 +1,27 @@
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
-
-const App = () => {
-  return (
-    <div>App</div>
-  )
+async function getSomeData() {
+  const res = await fetch("/api");
 }
+const App = () => {
+  const [data, setData] = useState();
+  async function getSomeData() {
+    const res = await fetch("/api");
+    const data = await res.json()
+    
+    console.log(data);
+    
+  }
+  useEffect(() => {
+    getSomeData();
+  });
+  return (
+    <div>
+      <div>App</div>
+      <div>{JSON.stringify(data)}</div>
+    </div>
+  );
+};
 
-export default App
+export default App;

@@ -7,7 +7,7 @@ async function getSomeData() {
 const App = () => {
   const [data, setData] = useState();
   async function getSomeData() {
-    const res = await fetch("/api");
+    const res = await fetch("/auth/login");
     const data = await res.json()
     
     console.log(data);

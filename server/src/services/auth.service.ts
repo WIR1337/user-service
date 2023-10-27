@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import db from "../database/queries/admin.queries.js";
-import auth from "../middleware/auth.js";
+import { generateAccessToken } from "../middleware/auth.js";
 
 class AuthService {
   async login(username: string, password: string) {
@@ -16,8 +16,8 @@ class AuthService {
       throw new Error("Incorrect password");
     }
 
-    const token = auth.generateAccessToken(username);
-    console.log({token})
+    const token = generateAccessToken(username);
+    console.log({ token });
     return { token };
   }
   async registration(username: string, password: string) {
@@ -31,6 +31,11 @@ class AuthService {
     await db.createUser(username, hashPassword);
 
     return { status: true, message: "User has been successfully registered" };
+  }
+  async users() {
+    const rows = await db.getUsers();
+
+    return rows;
   }
 }
 

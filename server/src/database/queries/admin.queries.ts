@@ -22,6 +22,11 @@ const db = {
     );
     return response;
   },
+  getUsers: async function () {
+    const response = await pool.query("select * from users");
+
+    return response.rows;
+  },
 };
 
 export default db;

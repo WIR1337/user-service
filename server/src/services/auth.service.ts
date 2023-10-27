@@ -13,7 +13,9 @@ class AuthService {
     var salt = bcrypt.genSaltSync(8);
     var hashPassword = bcrypt.hashSync(password, salt);
 
-    return rows;
+    await db.createUser(username, hashPassword);
+
+    return { status: true, message: "User has been successfully registered" };
   }
 }
 

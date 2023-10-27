@@ -12,6 +12,13 @@ const db = {
     );
     return response.rows;
   },
+  createUser: async function (name: string, password: string) {
+    const response = await pool.query("INSERT INTO users(username, password) VALUES ($1,$2)", [
+      name,
+      password,
+    ]);
+    return response
+  },
 };
 
 export default db;

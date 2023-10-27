@@ -11,9 +11,22 @@ class AuthController {
     }
   }
   async registration(req: Request, res: Response) {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ error: "Username and password are required." });
+    }
+
     try {
-      res.status(200).json({ message: "Registration" });
+      const data = await AuthService.registration(username, password);
+      
+      res.status(200).json(data);
     } catch (err) {
+      if (err.message == 'Exist') {
+        return res.status(409).json({ error: 'User with the same username already exists.' });
+      }
       res.status(500).json(err);
     }
   }

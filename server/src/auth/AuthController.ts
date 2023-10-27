@@ -8,7 +8,7 @@ class AuthController {
       res.status(500).json(err);
     }
   }
-  async reg(req: Request, res: Response) {
+  async registration(req: Request, res: Response) {
     try {
       res.status(200).json({ message: "Registration" });
     } catch (err) {

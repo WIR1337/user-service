@@ -6,7 +6,7 @@ config();
 const dbConfig: PoolConfig = {
   host: process.env.HOST || "localhost",
   port: process.env.PORT ? parseInt(process.env.PORT, 10) : 5432,
-  database: process.env.DATABASE,
+  database: process.env.DATABASE || "postgres",
   user: process.env.USER,
 };
 

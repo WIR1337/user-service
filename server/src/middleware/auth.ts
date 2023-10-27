@@ -1,7 +1,9 @@
+import { config } from "dotenv";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+config();
 
-export const secretKey = "MY_SECRET_KEY";
+export const secretKey = process.env.SECRET_KEY || "MY_SECRET_KEY";
 
 export const generateAccessToken = (name: string) => {
   const payload = {
@@ -15,15 +17,15 @@ export const verifyToken = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("Authorization");
-
-  if (!token) {
-    return res.status(401).json({ message: "Access denied. Token missing." });
-  }
-  console.log({ token });
   try {
+    const token = req.header("Authorization");
+
+    if (!token) {
+      return res.status(401).json({ message: "Access denied. Token missing." });
+    }
+    console.log({ token });
     const decoded = jwt.verify(token, secretKey);
-    req.user = decoded;
+    // req.user = decoded;
     next();
   } catch (error) {
     return res.status(403).json({ message: "Invalid token." });

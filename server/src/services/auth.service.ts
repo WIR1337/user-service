@@ -34,7 +34,7 @@ class AuthService {
   }
   async users() {
     const rows = await db.getUsers();
-
+  
     return rows;
   }
 }

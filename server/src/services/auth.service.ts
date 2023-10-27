@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import db from "../database/queries/admin.queries.js";
 class AuthService {
   async login() {
@@ -9,6 +10,8 @@ class AuthService {
     if (rows[0]) {
       throw new Error("User already exist");
     }
+    var salt = bcrypt.genSaltSync(8);
+    var hashPassword = bcrypt.hashSync(password, salt);
 
     return rows;
   }

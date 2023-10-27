@@ -23,7 +23,7 @@ class AuthController {
       const data = await AuthService.registration(username, password);
       
       res.status(200).json(data);
-    } catch (err) {
+    } catch (err: Error) {
       if (err.message == 'User already exist') {
         return res.status(409).json({ error: 'User with the same username already exists.' });
       }

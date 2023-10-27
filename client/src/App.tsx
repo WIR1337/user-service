@@ -14,7 +14,7 @@ const App = () => {
     
   }
   useEffect(() => {
-    getSomeData();
+    // getSomeData();
   });
   return (
     <div>

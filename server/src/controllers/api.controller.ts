@@ -19,9 +19,15 @@ class ApiController {
     const { username, password } = req.body;
 
     try {
+
       await ApiService.create(username,password);
       res.status(200).json({message: "User has been successfully created"});
-    } catch (err) {
+    } catch (err:any) {
+      if (err.message == "User already exist") {
+        return res
+          .status(409)
+          .json({ error: "User with the same username already exists." });
+      }
       res.status(500).json(err);
     }
   }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
+import { validationResult } from "express-validator";
 import AuthService from "../services/auth.service.js";
-
 class AuthController {
   async login(req: Request, res: Response) {
     const { username, password } = req.body;
@@ -24,13 +24,13 @@ class AuthController {
     }
   }
   async registration(req: Request, res: Response) {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username and password are required." });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const errorMessages = errors.array().map((error) => error.msg);
+      return res.status(400).json({ errors: errorMessages });
     }
+
+    const { username, password } = req.body;
 
     try {
       const data = await AuthService.registration(username, password);

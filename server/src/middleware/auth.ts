@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 config();
 
-export const secretKey = process.env.SECRET_KEY || "MY_SECRET_KEY";
+const secretKey = process.env.SECRET_KEY || "MY_SECRET_KEY";
 
 export const generateAccessToken = (name: string) => {
   const payload = {
@@ -23,7 +23,6 @@ export const verifyToken = (
     if (!token) {
       return res.status(401).json({ message: "Access denied. Token missing." });
     }
-    console.log({ token });
     const decoded = jwt.verify(token, secretKey);
     // req.user = decoded;
     next();

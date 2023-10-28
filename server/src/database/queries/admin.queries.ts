@@ -1,3 +1,4 @@
+import { role } from "../../types/user.js";
 import pool from "../index.js";
 
 const db = {
@@ -21,16 +22,16 @@ const db = {
     ]);
     return response.rows;
   },
-  createUser: async function (name: string, email: string, password: string) {
+  createUser: async function (name: string, email: string, password: string,role: role) {
     const response = await pool.query(
-      "INSERT INTO users(username, email,password) VALUES ($1,$2,$3)",
-      [name, email, password]
+      "INSERT INTO users(username, email,password, role) VALUES ($1,$2,$3,$4) RETURNING id",
+      [name, email, password, role]
     );
-    return response;
+    return response.rows;
   },
   getUsers: async function () {
     const response = await pool.query(
-      "select users.id, users.username,users.password, TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users ORDER BY users.id ASC"
+      "select users.id, users.username,users.email,users.password, users.role,TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users ORDER BY users.id ASC"
     );
     return response.rows;
   },

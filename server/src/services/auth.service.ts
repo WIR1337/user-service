@@ -27,13 +27,16 @@ class AuthService {
     // create separate functin ?
     var salt = bcrypt.genSaltSync(8);
     var hashPassword = bcrypt.hashSync(password, salt);
+    
+    const role = 'admin'
 
-    await db.createUser(username, email, hashPassword);
-    const token = generateAccessToken(username);
+    const [user] = await db.createUser(username, email, hashPassword,role);
+    const token = generateAccessToken(username,user.id, role);
 
     return {
       message: "User has been successfully registered",
       token,
+      user
     };
   }
 }

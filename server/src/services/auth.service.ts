@@ -29,12 +29,16 @@ class AuthService {
     var hashPassword = bcrypt.hashSync(password, salt);
 
     await db.createUser(username, hashPassword);
+    const token = generateAccessToken(username);
 
-    return { status: true, message: "User has been successfully registered" };
+    return {
+      message: "User has been successfully registered",
+      token,
+    };
   }
   async users() {
     const rows = await db.getUsers();
-  
+
     return rows;
   }
 }

@@ -9,7 +9,6 @@ class AuthService {
       throw new Error("User doesn't exist");
     }
     const pass = await db.getHashedPassword(username);
-
     const validPassword = bcrypt.compareSync(password, pass[0].password);
 
     if (!validPassword) {
@@ -25,6 +24,7 @@ class AuthService {
     if (rows[0]) {
       throw new Error("User already exist");
     }
+    // create separate functin ?
     var salt = bcrypt.genSaltSync(8);
     var hashPassword = bcrypt.hashSync(password, salt);
 

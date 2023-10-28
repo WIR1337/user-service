@@ -24,7 +24,6 @@ const db = {
   },
   getUsers: async function () {
     const response = await pool.query("select * from users");
-
     return response.rows;
   },
 };

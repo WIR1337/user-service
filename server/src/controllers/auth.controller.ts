@@ -30,10 +30,10 @@ class AuthController {
       return res.status(400).json({ errors: errorMessages });
     }
 
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     try {
-      const data = await AuthService.registration(username, password);
+      const data = await AuthService.registration(username, email, password);
       res.status(201).json(data);
     } catch (err: any) {
       if (err.message == "User already exist") {

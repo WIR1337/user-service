@@ -19,10 +19,9 @@ class ApiController {
     const { username, password } = req.body;
 
     try {
-
-      await ApiService.create(username,password);
-      res.status(200).json({message: "User has been successfully created"});
-    } catch (err:any) {
+      await ApiService.create(username, password);
+      res.status(200).json({ message: "User has been successfully created" });
+    } catch (err: any) {
       if (err.message == "User already exist") {
         return res
           .status(409)
@@ -31,7 +30,26 @@ class ApiController {
       res.status(500).json(err);
     }
   }
-  async edit(req: Request, res: Response) {}
+  async edit(req: Request, res: Response) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      const errorMessages = errors.array().map((error) => error.msg);
+      return res.status(400).json({ errors: errorMessages });
+    }
+    const { id,username } = req.body;
+
+    try {
+      await ApiService.edit(id,username);
+      res.status(200).json({ message: "User data has been successfully updated" });
+    } catch (err: any) {
+      if (err.message == "User doesn't exist") {
+        return res
+          .status(409)
+          .json({ error: "User with this ID doesn't exists." });
+      }
+      res.status(500).json(err);
+    }
+  }
 }
 
 export default new ApiController();

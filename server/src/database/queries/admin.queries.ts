@@ -15,6 +15,13 @@ const db = {
     );
     return response.rows;
   },
+  findUserByID: async function (id: string) {
+    const response = await pool.query(
+      "SELECT * FROM users WHERE id = $1",
+      [id]
+    );
+    return response.rows;
+  },
   createUser: async function (name: string, password: string) {
     const response = await pool.query(
       "INSERT INTO users(username, password) VALUES ($1,$2)",
@@ -25,6 +32,12 @@ const db = {
   getUsers: async function () {
     const response = await pool.query("select * from users");
     return response.rows;
+  },
+  editUser: async function (id: string, name: string) {
+    const response = await pool.query(
+      "UPDATE users SET username = $2  WHERE id = $1",
+      [id, name]
+    );
   },
 };
 

@@ -5,18 +5,25 @@ class ApiService {
     const response = await db.getUsers();
     return response;
   }
-  async create(username:string,password:string) {
-    const rows = await db.findUserByName(username)
+  async create(username: string, password: string) {
+    const rows = await db.findUserByName(username);
     if (rows[0]) {
       throw new Error("User already exist");
     }
 
     var salt = bcrypt.genSaltSync(8);
     var hashPassword = bcrypt.hashSync(password, salt);
-    
-    await db.createUser(username,hashPassword);
+
+    await db.createUser(username, hashPassword);
   }
-  async edit() {}
+  async edit(id: string, username: string) {
+    const rows = await db.findUserByID(id);
+    if (!rows[0]) {
+      throw new Error("User doesn't exist");
+    }
+    
+    await db.editUser(id, username);
+  }
 }
 
 export default new ApiService();

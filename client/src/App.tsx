@@ -232,11 +232,17 @@ const GetUsers: FC<GetProps> = ({ token, setUsers }) => {
 };
 
 const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
-  const [selected,setSelected] = useState(-1)
+  const [result,setResult] = useState<any>()
+  const [selected, setSelected] = useState(-1);
+  const [initialUsername, setInitialUsername] = useState("");
 
+  function clearRes() {
+    setTimeout(() => setResult(''), 3000)
+  }
   const handleEditUser = (index: number) => {
-    
-    setSelected(index)
+    const { username } = users[0];
+    setInitialUsername(username);
+    setSelected(index);
   };
 
   const handleSaveUser = async (user: User) => {
@@ -251,6 +257,10 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
       });
 
       if (response.ok) {
+        const data = await response.json()
+        setResult(data)
+        clearRes()
+        setSelected(-1)
       } else {
         console.error("Error saving user: ", response.statusText);
       }
@@ -260,12 +270,19 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
   };
 
   const handleCancelEdit = () => {
+    setUsers((prevUsers) => {
+      const updatedUsers = [...prevUsers];
+      updatedUsers[selected].username = initialUsername
+      return updatedUsers;
+    })
     setSelected(-1);
   };
 
   return (
     <div>
+      <div>{JSON.stringify(result)}</div>
       <h2>Users List</h2>
+
       <table>
         <thead>
           <tr>

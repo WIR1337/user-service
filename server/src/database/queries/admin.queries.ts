@@ -30,7 +30,7 @@ const db = {
     return response;
   },
   getUsers: async function () {
-    const response = await pool.query("select users.id, users.username,users.password, TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users");
+    const response = await pool.query("select users.id, users.username,users.password, TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users ORDER BY users.id ASC");
     return response.rows;
   },
   editUser: async function (id: string, name: string) {

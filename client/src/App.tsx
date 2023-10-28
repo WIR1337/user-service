@@ -5,6 +5,7 @@ type Setter<T> = Dispatch<SetStateAction<T>>;
 interface User {
   id: string;
   username: string;
+  email: string;
   password: string;
   created_at: string;
 }
@@ -314,6 +315,7 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
                   user.username
                 )}
               </td>
+              <td>{user.email}</td>
               <td>{user.password}</td>
               <td>{user.created_at}</td>
               <td>

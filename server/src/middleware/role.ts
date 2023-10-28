@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { role } from "../types/user.js";
 import { secretKey } from "./auth.js";
 
@@ -14,8 +14,7 @@ export const validateRole = (userRole: role) => {
           .json({ message: "Access denied. Token missing." });
       }
 
-      //fix type
-      const { role } = jwt.verify(token, secretKey);
+      const { role } = jwt.verify(token, secretKey) as JwtPayload;
 
       const UserHasPermission = role == userRole
       if (!UserHasPermission) {

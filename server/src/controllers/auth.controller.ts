@@ -44,14 +44,6 @@ class AuthController {
       res.status(500).json(err);
     }
   }
-  async users(req: Request, res: Response) {
-    try {
-      const data = await AuthService.users();
-      res.status(201).json(data);
-    } catch (err: any) {
-      res.status(500).json(err);
-    }
-  }
 }
 
 export default new AuthController();

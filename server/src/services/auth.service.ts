@@ -36,11 +36,6 @@ class AuthService {
       token,
     };
   }
-  async users() {
-    const rows = await db.getUsers();
-
-    return rows;
-  }
 }
 
 export default new AuthService();

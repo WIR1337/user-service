@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from "express";
 
+import api from "./routes/api.router.js";
 import auth from "./routes/auth.router.js";
 
 const PORT = 8000;
@@ -19,5 +20,6 @@ async function start() {
 }
 
 app.use("/auth", auth);
+app.use("/api", api);
 
 start();

@@ -16,13 +16,13 @@ class ApiService {
 
     await db.createUser(username, email, hashPassword, "user");
   }
-  async edit(id: string, username: string) {
+  async edit(id: string, username: string|undefined, email:string|undefined) {
     const rows = await db.findUserByID(id);
     if (!rows[0]) {
       throw new Error("User doesn't exist");
     }
 
-    await db.editUser(id, username);
+    await db.editUser(id, username,email);
   }
 }
 

@@ -1,4 +1,5 @@
 import { role } from "../../types/user.js";
+import { generateEditingQuery } from "../../utils/db.utils.js";
 import pool from "../index.js";
 
 const db = {
@@ -22,7 +23,12 @@ const db = {
     ]);
     return response.rows;
   },
-  createUser: async function (name: string, email: string, password: string,role: role) {
+  createUser: async function (
+    name: string,
+    email: string,
+    password: string,
+    role: role
+  ) {
     const response = await pool.query(
       "INSERT INTO users(username, email,password, role) VALUES ($1,$2,$3,$4) RETURNING id",
       [name, email, password, role]
@@ -35,12 +41,15 @@ const db = {
     );
     return response.rows;
   },
-  editUser: async function (id: string, name: string) {
-    const response = await pool.query(
-      "UPDATE users SET username = $2  WHERE id = $1",
-      [id, name]
-    );
+  editUser: async function (
+    id: string,
+    name: string | undefined,
+    email: string | undefined
+  ) {
+    const response = await pool.query(generateEditingQuery(id, name, email));
   },
 };
+
+
 
 export default db;

@@ -31,8 +31,9 @@ export const validateLogin = [
 ];
 
 export const validateEdititng = [
-  body("id", "ID must be a number").isNumeric(),
   body("id", "ID is required").notEmpty(),
+  body("id", "ID must be a number").isNumeric(),
+
   oneOf([body("username").notEmpty(), body("email").notEmpty()], {
     message: "Username or email are required",
   }),

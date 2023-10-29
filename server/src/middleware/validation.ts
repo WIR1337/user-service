@@ -12,10 +12,9 @@ export const validateRegistration = [
     min: 4,
     max: 15,
   }),
-  body("email", "Email must be between 4 and 15 characters").isLength({
-    min: 4,
-    max: 15,
-  }),
+  body("email")
+    .isEmail()
+    .withMessage("Invalid email format"),
 ];
 export const validateLogin = [
   body("username", "Username is required.").notEmpty(),

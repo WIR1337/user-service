@@ -48,8 +48,25 @@ const db = {
   ) {
     const response = await pool.query(generateEditingQuery(id, name, email));
   },
+  addAction: async function (
+    id: string | number,
+    action: "create" | "update",
+    params?: Partial<{ username: string; email: string }>
+  ) {
+    await pool.query(
+      "INSERT INTO users_actions (user_id, action_type, action_data) VALUES ($1,$2,$3)",
+      [id, action, generateActionMessage(action,params)]
+    );
+  },
 };
 
-
+function generateActionMessage(
+  action: "create" | "update",
+  params?: Partial<{ username: string; email: string }>
+) {
+  if (action == 'create') {
+    return {message: 'User is created'}
+  }
+}
 
 export default db;

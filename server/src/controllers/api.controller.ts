@@ -16,10 +16,11 @@ class ApiController {
       const errorMessages = errors.array().map((error) => error.msg);
       return res.status(400).json({ errors: errorMessages });
     }
-    const { username, password } = req.body;
+
+    const { username, email, password } = req.body;
 
     try {
-      await ApiService.create(username, password);
+      await ApiService.create(username, email, password);
       res.status(200).json({ message: "User has been successfully created" });
     } catch (err: any) {
       if (err.message == "User already exist") {
@@ -36,11 +37,14 @@ class ApiController {
       const errorMessages = errors.array().map((error) => error.msg);
       return res.status(400).json({ errors: errorMessages });
     }
-    const { id,username } = req.body;
+    console.log({errors})
+    const { id, username,email } = req.body;
 
     try {
-      await ApiService.edit(id,username);
-      res.status(200).json({ message: "User data has been successfully updated" });
+      await ApiService.edit(id, username);
+      res
+        .status(200)
+        .json({ message: "User data has been successfully updated" });
     } catch (err: any) {
       if (err.message == "User doesn't exist") {
         return res

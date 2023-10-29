@@ -15,19 +15,27 @@ class ApiService {
     var hashPassword = bcrypt.hashSync(password, salt);
 
     const [user] = await db.createUser(username, email, hashPassword, "user");
-    await db.addAction(user.id,'create')
+    await db.addAction(user.id, "create");
   }
   async edit(
     id: string,
     username: string | undefined,
     email: string | undefined
   ) {
-    const rows = await db.findUserByID(id);
-    if (!rows[0]) {
+    const [user] = await db.findUserByID(id);
+    if (!user) {
       throw new Error("User doesn't exist");
     }
 
     await db.editUser(id, username, email);
+    const params = {
+      username,
+      email,
+      prevName: user.username,
+      prevEmail: user.email
+    }
+
+    await db.addAction(id,'update', params)
   }
 }
 

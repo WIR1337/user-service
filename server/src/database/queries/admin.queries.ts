@@ -51,21 +51,42 @@ const db = {
   addAction: async function (
     id: string | number,
     action: "create" | "update",
-    params?: Partial<{ username: string; email: string }>
+    params?: Partial<{
+      username: string;
+      email: string;
+      prevName: string;
+      prevEmail: string;
+    }>
   ) {
     await pool.query(
       "INSERT INTO users_actions (user_id, action_type, action_data) VALUES ($1,$2,$3)",
-      [id, action, generateActionMessage(action,params)]
+      [id, action, generateActionMessage(action, params)]
     );
   },
 };
 
 function generateActionMessage(
   action: "create" | "update",
-  params?: Partial<{ username: string; email: string }>
+  params?: Partial<{
+    username: string;
+    email: string;
+    prevName: string;
+    prevEmail: string;
+  }>
 ) {
-  if (action == 'create') {
-    return {message: 'User is created'}
+  if (action == "create") {
+    return { message: "User is created" };
+  }
+  if (action == "update" && params != undefined) {
+    const { prevName, prevEmail, username, email } = params;
+    
+    let chunk_1 = username
+      ? `Name changed from ${prevName} to ${username}`
+      : "";
+    let chunk_2 = email ? `Email changed from ${prevEmail} to ${email}` : "";
+
+
+    return { message: `${chunk_1} ${chunk_2}` };
   }
 }
 

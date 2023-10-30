@@ -7,6 +7,7 @@ interface User {
   username: string;
   email: string;
   password: string;
+  role: "admin" | "user";
   created_at: string;
 }
 interface AuthProps {
@@ -30,6 +31,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
   const [regPassword, setRegPassword] = useState("");
   const [error, setError] = useState("");
   const [currentToken, setCurrentToken] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("Bearer");
@@ -63,6 +65,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         const data = await response.json();
         setToken(data.token);
         saveTokenToLocalStorage(data.token);
+        setCurrentUser(loginUsername);
         setCurrentToken("");
         setError("");
       } else {
@@ -82,7 +85,11 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: regUsername, email: regEmail,password: regPassword }),
+        body: JSON.stringify({
+          username: regUsername,
+          email: regEmail,
+          password: regPassword,
+        }),
       });
 
       if (response.ok) {
@@ -99,10 +106,10 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
       setError("An error occurred while registering.");
     }
   };
-  const removeToken =async () => {
-      localStorage.removeItem('Bearer')
-      setToken('')
-  }
+  const removeToken = async () => {
+    localStorage.removeItem("Bearer");
+    setToken("");
+  };
   return (
     <div>
       <div>
@@ -130,7 +137,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
           onChange={(e) => setRegUsername(e.target.value)}
         />
         <input
-          type="mail"
+          type="email"
           placeholder="Email"
           value={regEmail}
           onChange={(e) => setRegEmail(e.target.value)}
@@ -144,30 +151,37 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         <button onClick={handleRegistration}>Register</button>
       </div>
 
-      {token && <p>Token: {token}</p>}
+      {token && (
+        <div style={{ width: "600px", wordWrap: "break-word" }}>
+          Token: {token}
+        </div>
+      )}
       {token && <button onClick={removeToken}>Remove token</button>}
-      {currentToken && <p>CurrentToken: {currentToken}</p>}
+      {currentToken && (
+        <p style={{ width: "600px" }}>CurrentToken: {currentToken}</p>
+      )}
       {error && <p>Error: {JSON.stringify(error)}</p>}
+      {currentUser && <h3>You are loggin as {currentUser}</h3>}
     </div>
   );
 };
 
 const CreateUser: FC<{ token: string }> = ({ token }) => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState();
   const [error, setError] = useState<any>();
 
   const handleCreateUser = async () => {
     try {
-      // Fetch request to create a user
       const res = await fetch("/api/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, // Include the bearer token in the header
+          Authorization: token,
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       if (res.ok) {
@@ -193,6 +207,12 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
         onChange={(e) => setUsername(e.target.value)}
       />
       <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
         type="password"
         placeholder="Password"
         value={password}
@@ -201,8 +221,8 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
       <button onClick={handleCreateUser}>Create User</button>
 
       <div>
-        <p>Response: {JSON.stringify(response)}</p>
-        <p>Error: {JSON.stringify(error)}</p>
+        {response && <p>Response: {JSON.stringify(response)}</p>}
+        {error && <p>Error: {JSON.stringify(error)}</p>}
       </div>
     </div>
   );
@@ -239,25 +259,39 @@ const GetUsers: FC<GetProps> = ({ token, setUsers }) => {
       <h2>Get Users</h2>
       <button onClick={handleGetUsers}>Get Users</button>
 
-      {error && <p>Error: {error}</p>}
+      {error && <p>Error: {JSON.stringify(error)}</p>}
     </div>
   );
 };
 
 const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
-  const [result,setResult] = useState<any>()
+  const [result, setResult] = useState<any>();
   const [selected, setSelected] = useState(-1);
   const [initialUsername, setInitialUsername] = useState("");
+  const [initialEmail, setInitialEmail] = useState("");
 
   function clearRes() {
-    setTimeout(() => setResult(''), 3000)
+    setTimeout(() => setResult(""), 3000);
   }
   const handleEditUser = (index: number) => {
-    const { username } = users[0];
+    const { username, email } = users[index];
     setInitialUsername(username);
+    setInitialEmail(email);
     setSelected(index);
   };
 
+  const generateBody = (id: string, username: string, email: string) => {
+    var body: Partial<{ id: string; username: string; email: string }> = {
+      id,
+    };
+    if (username != initialUsername) {
+      body.username = username;
+    }
+    if (email != initialEmail) {
+      body.email = email;
+    }
+    return body;
+  };
   const handleSaveUser = async (user: User) => {
     try {
       const response = await fetch(`/api/edit/`, {
@@ -266,14 +300,14 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ id: user.id, username: user.username }),
+        body: JSON.stringify(generateBody(user.id, user.username, user.email)),
       });
 
       if (response.ok) {
-        const data = await response.json()
-        setResult(data)
-        clearRes()
-        setSelected(-1)
+        const data = await response.json();
+        setResult(data);
+        clearRes();
+        setSelected(-1);
       } else {
         console.error("Error saving user: ", response.statusText);
       }
@@ -285,9 +319,9 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
   const handleCancelEdit = () => {
     setUsers((prevUsers) => {
       const updatedUsers = [...prevUsers];
-      updatedUsers[selected].username = initialUsername
+      updatedUsers[selected].username = initialUsername;
       return updatedUsers;
-    })
+    });
     setSelected(-1);
   };
 
@@ -301,7 +335,9 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
           <tr>
             <th>ID</th>
             <th>Username</th>
+            <th>Email</th>
             <th>Password</th>
+            <th>Role</th>
             <th>Created_at</th>
             <th>Actions</th>
           </tr>
@@ -327,8 +363,23 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
                   user.username
                 )}
               </td>
-              <td>{user.email}</td>
+              {selected === index ? (
+                <input
+                  type="email"
+                  value={user.email}
+                  onChange={(e) =>
+                    setUsers((prevUsers) => {
+                      const updatedUsers = [...prevUsers];
+                      updatedUsers[index].email = e.target.value;
+                      return updatedUsers;
+                    })
+                  }
+                />
+              ) : (
+                user.email
+              )}
               <td>{user.password}</td>
+              <td>{user.role}</td>
               <td>{user.created_at}</td>
               <td>
                 {selected === index ? (
@@ -351,12 +402,15 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
+
   return (
     <div>
       <AuthComponent token={token} setToken={setToken}></AuthComponent>
       {token && <CreateUser token={token}></CreateUser>}
       {token && <GetUsers token={token} setUsers={setUsers}></GetUsers>}
-      {token && <UsersList token={token} users={users} setUsers={setUsers}></UsersList>}
+      {token && (
+        <UsersList token={token} users={users} setUsers={setUsers}></UsersList>
+      )}
     </div>
   );
 };

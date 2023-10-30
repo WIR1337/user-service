@@ -6,3 +6,7 @@ export interface PropsToEdit {
   prevName: string;
   prevEmail: string;
 }
+
+export interface ActionID {
+  id : number
+}

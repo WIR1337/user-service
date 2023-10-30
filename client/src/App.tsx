@@ -23,6 +23,7 @@ interface UsersListProps {
   users: User[];
   setUsers: Setter<User[]>;
 }
+
 const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -166,13 +167,39 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
   );
 };
 
-const CreateUser: FC<{ token: string }> = ({ token }) => {
+const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
+  token,
+  socketSend,
+}) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState("");
   const [error, setError] = useState<any>();
+  function createTimestamp() {
+    const currentDate = new Date();
 
+    const hours = currentDate.getHours().toString().padStart(2, "0");
+    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
+
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const year = currentDate.getFullYear() % 100;
+
+    const formattedTimestamp = `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
+
+    return formattedTimestamp;
+  }
+  const generateMessage = (id: number, user_id: number) => {
+    return {
+      id,
+      user_id,
+      action_type: "create",
+      action_data: { message: "User is created" },
+      actions_time: createTimestamp(),
+    };
+  };
   const handleCreateUser = async () => {
     try {
       const res = await fetch("/api/create", {
@@ -185,8 +212,10 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
       });
 
       if (res.ok) {
-        const responseData = await res.json();
-        setResponse(responseData.message);
+        const { message, id, user_id } = await res.json();
+
+        socketSend(generateMessage(id, user_id));
+        setResponse(message);
         setError("");
       } else {
         const responseData = await res.json();
@@ -228,7 +257,6 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
     </div>
   );
 };
-
 const GetUsers: FC<GetProps> = ({ token, setUsers }) => {
   const [error, setError] = useState<any>();
 
@@ -424,7 +452,13 @@ function useWebSocket() {
       socket.close();
     };
   }, []);
-  function sendMessage() {}
+  function sendMessage(message: any) {
+    // if (serviceStatus == "Ready") {
+
+    console.log("SENDED MESSAGE :", message);
+    socket.send(JSON.stringify(message));
+    // }
+  }
   return { sendMessage };
 }
 const App = () => {
@@ -434,7 +468,9 @@ const App = () => {
   return (
     <div>
       <AuthComponent token={token} setToken={setToken}></AuthComponent>
-      {token && <CreateUser token={token}></CreateUser>}
+      {token && (
+        <CreateUser token={token} socketSend={sendMessage}></CreateUser>
+      )}
       {token && <GetUsers token={token} setUsers={setUsers}></GetUsers>}
       {token && (
         <UsersList token={token} users={users} setUsers={setUsers}></UsersList>

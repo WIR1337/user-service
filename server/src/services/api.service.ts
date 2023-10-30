@@ -15,7 +15,9 @@ class ApiService {
     var hashPassword = bcrypt.hashSync(password, salt);
 
     const [user] = await db.createUser(username, email, hashPassword, "user");
-    await db.addAction(user.id, "create");
+    const [action] = await db.addAction(user.id, "create");
+    
+    return { id: action.id, user_id: user.id };
   }
   async edit(
     id: string,
@@ -32,10 +34,10 @@ class ApiService {
       username,
       email,
       prevName: user.username,
-      prevEmail: user.email
-    }
+      prevEmail: user.email,
+    };
 
-    await db.addAction(id,'update', params)
+    await db.addAction(id, "update", params);
   }
 }
 

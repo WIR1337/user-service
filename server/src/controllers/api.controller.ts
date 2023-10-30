@@ -20,8 +20,8 @@ class ApiController {
     const { username, email, password } = req.body;
 
     try {
-      await ApiService.create(username, email, password);
-      res.status(200).json({ message: "User has been successfully created" });
+      const {id,user_id} = await ApiService.create(username, email, password);
+      res.status(200).json({ message: "User has been successfully created" , id, user_id});
     } catch (err: any) {
       if (err.message == "User already exist") {
         return res

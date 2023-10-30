@@ -1,5 +1,5 @@
 import { QueryResult } from "pg";
-import { Action, PropsToEdit } from "../../types/actions.js";
+import { Action, ActionID, PropsToEdit } from "../../types/actions.js";
 import { HashedPassword, User, UserID, role } from "../../types/user.js";
 import {
   generateActionMessage,
@@ -60,10 +60,12 @@ const db = {
     action: Action,
     params?: PropsToEdit
   ) {
-    await pool.query(
-      "INSERT INTO users_actions (user_id, action_type, action_data) VALUES ($1,$2,$3)",
+    const response:QueryResult<ActionID> = await pool.query(
+      "INSERT INTO users_actions (user_id, action_type, action_data) VALUES ($1,$2,$3) RETURNING id",
       [id, action, generateActionMessage(action, params)]
     );
+
+    return response.rows
   },
 };
 

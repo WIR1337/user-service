@@ -1,17 +1,20 @@
 import { Action, PropsToEdit } from "../../types/actions.js";
-import { role } from "../../types/user.js";
-import { generateActionMessage, generateEditingQuery } from "../../utils/db.utils.js";
+import { HashedPassword, User, role } from "../../types/user.js";
+import {
+  generateActionMessage,
+  generateEditingQuery,
+} from "../../utils/db.utils.js";
 import pool from "../index.js";
 
 const db = {
-  getHashedPassword: async function (name: string) {
+  getHashedPassword: async function (name: string): Promise<HashedPassword[]> {
     const response = await pool.query(
       "SELECT password FROM users WHERE username = $1",
       [name]
     );
     return response.rows;
   },
-  findUserByName: async function (name: string) {
+  findUserByName: async function (name: string): Promise<User[]> {
     const response = await pool.query(
       "SELECT * FROM users WHERE username = $1",
       [name]
@@ -60,7 +63,5 @@ const db = {
     );
   },
 };
-
-
 
 export default db;

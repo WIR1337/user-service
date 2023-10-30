@@ -364,21 +364,23 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
                   user.username
                 )}
               </td>
-              {selected === index ? (
-                <input
-                  type="email"
-                  value={user.email}
-                  onChange={(e) =>
-                    setUsers((prevUsers) => {
-                      const updatedUsers = [...prevUsers];
-                      updatedUsers[index].email = e.target.value;
-                      return updatedUsers;
-                    })
-                  }
-                />
-              ) : (
-                user.email
-              )}
+              <td>
+                {selected === index ? (
+                  <input
+                    type="email"
+                    value={user.email}
+                    onChange={(e) =>
+                      setUsers((prevUsers) => {
+                        const updatedUsers = [...prevUsers];
+                        updatedUsers[index].email = e.target.value;
+                        return updatedUsers;
+                      })
+                    }
+                  />
+                ) : (
+                  user.email
+                )}
+              </td>
               <td>{user.password}</td>
               <td>{user.role}</td>
               <td>{user.created_at}</td>

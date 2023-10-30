@@ -43,7 +43,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         "Token not found in local storage. You should loggin or register"
       );
     }
-  },[]);
+  }, []);
 
   function saveTokenToLocalStorage(token: string) {
     localStorage.setItem("Bearer", token);
@@ -170,7 +170,7 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState("");
   const [error, setError] = useState<any>();
 
   const handleCreateUser = async () => {
@@ -191,7 +191,7 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
       } else {
         const responseData = await res.json();
         setError(responseData);
-        setResponse('')
+        setResponse("");
       }
     } catch (error) {
       setError(error);
@@ -402,10 +402,35 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
   );
 };
 
+function useWebSocket() {
+  const [serviceStatus, setServiceStatus] = useState("");
+  var socket: WebSocket;
+  useEffect(() => {
+    socket = new WebSocket("ws://localhost:8080");
+
+    socket.onopen = () => {
+      console.log("WebSocket connection opened");
+    };
+
+    socket.onmessage = (event) => {
+      const data = event.data;
+      console.log("Received:", data);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+  function sendMessage() {}
+  return { sendMessage };
+}
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
-
+  const { sendMessage } = useWebSocket();
   return (
     <div>
       <AuthComponent token={token} setToken={setToken}></AuthComponent>

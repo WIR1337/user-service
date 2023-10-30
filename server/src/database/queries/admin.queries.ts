@@ -1,6 +1,6 @@
 import { QueryResult } from "pg";
 import { Action, PropsToEdit } from "../../types/actions.js";
-import { HashedPassword, User, role } from "../../types/user.js";
+import { HashedPassword, User, UserID, role } from "../../types/user.js";
 import {
   generateActionMessage,
   generateEditingQuery,
@@ -13,20 +13,21 @@ const db = {
       "SELECT password FROM users WHERE username = $1",
       [name]
     );
-    
+
     return response.rows;
   },
   findUserByName: async function (name: string) {
-    const response:QueryResult<User> = await pool.query(
+    const response: QueryResult<User> = await pool.query(
       "SELECT * FROM users WHERE username = $1",
       [name]
     );
     return response.rows;
   },
   findUserByID: async function (id: string) {
-    const response = await pool.query("SELECT * FROM users WHERE id = $1", [
-      id,
-    ]);
+    const response: QueryResult<User> = await pool.query(
+      "SELECT * FROM users WHERE id = $1",
+      [id]
+    );
     return response.rows;
   },
   createUser: async function (
@@ -35,14 +36,14 @@ const db = {
     password: string,
     role: role
   ) {
-    const response = await pool.query(
+    const response: QueryResult<UserID> = await pool.query(
       "INSERT INTO users(username, email,password, role) VALUES ($1,$2,$3,$4) RETURNING id",
       [name, email, password, role]
     );
     return response.rows;
   },
   getUsers: async function () {
-    const response = await pool.query(
+    const response: QueryResult<User> = await pool.query(
       "select users.id, users.username,users.email,users.password, users.role,TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users ORDER BY users.id ASC"
     );
     return response.rows;

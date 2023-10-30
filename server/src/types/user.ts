@@ -12,3 +12,6 @@ export type role = "admin" | "user";
 export interface HashedPassword {
   password: string;
 }
+export interface UserID {
+  id : number
+}

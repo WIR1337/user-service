@@ -10,6 +10,7 @@ class AuthService {
     }
 
     const [hashed] = await db.getHashedPassword(username);
+    
     const validPassword = bcrypt.compareSync(password, hashed.password);
 
     if (!validPassword) {

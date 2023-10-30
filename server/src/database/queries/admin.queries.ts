@@ -1,3 +1,4 @@
+import { QueryResult } from "pg";
 import { Action, PropsToEdit } from "../../types/actions.js";
 import { HashedPassword, User, role } from "../../types/user.js";
 import {
@@ -7,15 +8,16 @@ import {
 import pool from "../index.js";
 
 const db = {
-  getHashedPassword: async function (name: string): Promise<HashedPassword[]> {
-    const response = await pool.query(
+  getHashedPassword: async function (name: string) {
+    const response: QueryResult<HashedPassword> = await pool.query(
       "SELECT password FROM users WHERE username = $1",
       [name]
     );
+    
     return response.rows;
   },
-  findUserByName: async function (name: string): Promise<User[]> {
-    const response = await pool.query(
+  findUserByName: async function (name: string) {
+    const response:QueryResult<User> = await pool.query(
       "SELECT * FROM users WHERE username = $1",
       [name]
     );

@@ -26,6 +26,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [regUsername, setRegUsername] = useState("");
+  const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [error, setError] = useState("");
   const [currentToken, setCurrentToken] = useState("");
@@ -81,7 +82,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: regUsername, password: regPassword }),
+        body: JSON.stringify({ username: regUsername, email: regEmail,password: regPassword }),
       });
 
       if (response.ok) {
@@ -98,7 +99,10 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
       setError("An error occurred while registering.");
     }
   };
-
+  const removeToken =async () => {
+      localStorage.removeItem('Bearer')
+      setToken('')
+  }
   return (
     <div>
       <div>
@@ -126,6 +130,12 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
           onChange={(e) => setRegUsername(e.target.value)}
         />
         <input
+          type="mail"
+          placeholder="Email"
+          value={regEmail}
+          onChange={(e) => setRegEmail(e.target.value)}
+        />
+        <input
           type="password"
           placeholder="Password"
           value={regPassword}
@@ -133,7 +143,9 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         />
         <button onClick={handleRegistration}>Register</button>
       </div>
+
       {token && <p>Token: {token}</p>}
+      {token && <button onClick={removeToken}>Remove token</button>}
       {currentToken && <p>CurrentToken: {currentToken}</p>}
       {error && <p>Error: {JSON.stringify(error)}</p>}
     </div>
@@ -342,9 +354,9 @@ const App = () => {
   return (
     <div>
       <AuthComponent token={token} setToken={setToken}></AuthComponent>
-      <CreateUser token={token}></CreateUser>
-      <GetUsers token={token} setUsers={setUsers}></GetUsers>
-      <UsersList token={token} users={users} setUsers={setUsers}></UsersList>
+      {token && <CreateUser token={token}></CreateUser>}
+      {token && <GetUsers token={token} setUsers={setUsers}></GetUsers>}
+      {token && <UsersList token={token} users={users} setUsers={setUsers}></UsersList>}
     </div>
   );
 };

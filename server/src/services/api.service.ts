@@ -37,7 +37,8 @@ class ApiService {
       prevEmail: user.email,
     };
 
-    await db.addAction(id, "update", params);
+    const [action]= await db.addAction(id, "update", params);
+    return {id: action.id}
   }
 }
 

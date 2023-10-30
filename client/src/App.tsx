@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useRef, useState } from "react";
 import "./App.css";
 
 type Setter<T> = Dispatch<SetStateAction<T>>;
@@ -22,8 +22,57 @@ interface UsersListProps {
   token: string;
   users: User[];
   setUsers: Setter<User[]>;
+  socketSend: (message: any) => void;
 }
+function useWebSocket() {
+  const [serviceStatus, setServiceStatus] = useState("");
+  var socket: WebSocket;
+  var socketRef = useRef<WebSocket>();
+  useEffect(() => {
+    socket = new WebSocket("ws://localhost:8080");
+    socketRef.current = socket
+    socket.onopen = () => {
+      console.log("WebSocket connection opened");
+    };
 
+    socket.onmessage = (event) => {
+      const data = event.data;
+      console.log("Received:", data);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+  function sendMessage(message: any) {
+    // if (serviceStatus == "Ready") {
+
+    console.log("SENDED MESSAGE :", message);
+    if (socketRef.current) {
+      socketRef.current.send(JSON.stringify(message));
+    }
+    // }
+  }
+  return { sendMessage };
+}
+function createTimestamp() {
+  const currentDate = new Date();
+
+  const hours = currentDate.getHours().toString().padStart(2, "0");
+  const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+  const seconds = currentDate.getSeconds().toString().padStart(2, "0");
+
+  const day = currentDate.getDate().toString().padStart(2, "0");
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const year = currentDate.getFullYear() % 100;
+
+  const formattedTimestamp = `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
+
+  return formattedTimestamp;
+}
 const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -166,7 +215,6 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
     </div>
   );
 };
-
 const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
   token,
   socketSend,
@@ -176,21 +224,7 @@ const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
   const [password, setPassword] = useState("");
   const [response, setResponse] = useState("");
   const [error, setError] = useState<any>();
-  function createTimestamp() {
-    const currentDate = new Date();
-
-    const hours = currentDate.getHours().toString().padStart(2, "0");
-    const minutes = currentDate.getMinutes().toString().padStart(2, "0");
-    const seconds = currentDate.getSeconds().toString().padStart(2, "0");
-
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const year = currentDate.getFullYear() % 100;
-
-    const formattedTimestamp = `${hours}:${minutes}:${seconds} ${day}.${month}.${year}`;
-
-    return formattedTimestamp;
-  }
+  
   const generateMessage = (id: number, user_id: number) => {
     return {
       id,
@@ -293,7 +327,12 @@ const GetUsers: FC<GetProps> = ({ token, setUsers }) => {
   );
 };
 
-const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
+const UsersList: FC<UsersListProps> = ({
+  token,
+  users,
+  setUsers,
+  socketSend,
+}) => {
   const [result, setResult] = useState<any>();
   const [selected, setSelected] = useState(-1);
   const [initialUsername, setInitialUsername] = useState("");
@@ -310,7 +349,7 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
   };
 
   const generateBody = (id: string, username: string, email: string) => {
-    var body: Partial<{ id: string; username: string; email: string }> = {
+    var body:{ id: string; username?: string; email?: string } = {
       id,
     };
     if (username !== initialUsername) {
@@ -321,7 +360,27 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
     }
     return body;
   };
+  const generateMessage = (action_id:number,params: {
+    id: string;
+    username?: string;
+    email?: string;
+  }) => {
+    const { id ,username, email } = params;
+
+    let chunk_1 = username
+      ? `Name changed from ${initialUsername} to ${username}`
+      : "";
+    let chunk_2 = email ? `Email changed from ${initialEmail} to ${email}` : "";
+
+    return {id:action_id,user_id:id,action_type: 'update',action_data: { message: `${chunk_1} ${chunk_2}` },action_time: createTimestamp()};
+  };
   const handleSaveUser = async (user: User) => {
+    if (initialUsername == user.username && initialEmail == user.email) {
+      return;
+    }
+    const body = generateBody(user.id, user.username, user.email);
+    
+
     try {
       const response = await fetch(`/api/edit/`, {
         method: "PUT",
@@ -329,12 +388,15 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify(generateBody(user.id, user.username, user.email)),
+        body: JSON.stringify(body),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setResult(data);
+        const {message,id} = await response.json();
+        const sendingData = generateMessage(id,body);
+        console.log(socketSend)
+        socketSend(sendingData);
+        setResult(message);
         clearRes();
         setSelected(-1);
       } else {
@@ -430,37 +492,7 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
   );
 };
 
-function useWebSocket() {
-  const [serviceStatus, setServiceStatus] = useState("");
-  var socket: WebSocket;
-  useEffect(() => {
-    socket = new WebSocket("ws://localhost:8080");
 
-    socket.onopen = () => {
-      console.log("WebSocket connection opened");
-    };
-
-    socket.onmessage = (event) => {
-      const data = event.data;
-      console.log("Received:", data);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-    return () => {
-      socket.close();
-    };
-  }, []);
-  function sendMessage(message: any) {
-    // if (serviceStatus == "Ready") {
-
-    console.log("SENDED MESSAGE :", message);
-    socket.send(JSON.stringify(message));
-    // }
-  }
-  return { sendMessage };
-}
 const App = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [token, setToken] = useState("");
@@ -473,7 +505,7 @@ const App = () => {
       )}
       {token && <GetUsers token={token} setUsers={setUsers}></GetUsers>}
       {token && (
-        <UsersList token={token} users={users} setUsers={setUsers}></UsersList>
+        <UsersList token={token} users={users} setUsers={setUsers} socketSend={sendMessage}></UsersList>
       )}
     </div>
   );

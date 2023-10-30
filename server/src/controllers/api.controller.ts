@@ -40,10 +40,10 @@ class ApiController {
     const { id, username, email } = req.body;
 
     try {
-      await ApiService.edit(id, username,email);
+      const data = await ApiService.edit(id, username,email);
       res
         .status(200)
-        .json({ message: "User data has been successfully updated" });
+        .json({ message: "User data has been successfully updated" , id: data.id});
     } catch (err: any) {
       if (err.message == "User doesn't exist") {
         return res

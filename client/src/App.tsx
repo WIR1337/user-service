@@ -43,7 +43,7 @@ const AuthComponent: FC<AuthProps> = ({ token, setToken }) => {
         "Token not found in local storage. You should loggin or register"
       );
     }
-  });
+  },[]);
 
   function saveTokenToLocalStorage(token: string) {
     localStorage.setItem("Bearer", token);
@@ -285,10 +285,10 @@ const UsersList: FC<UsersListProps> = ({ token, users, setUsers }) => {
     var body: Partial<{ id: string; username: string; email: string }> = {
       id,
     };
-    if (username != initialUsername) {
+    if (username !== initialUsername) {
       body.username = username;
     }
-    if (email != initialEmail) {
+    if (email !== initialEmail) {
       body.email = email;
     }
     return body;

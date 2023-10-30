@@ -170,7 +170,7 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState('');
   const [error, setError] = useState<any>();
 
   const handleCreateUser = async () => {
@@ -190,7 +190,8 @@ const CreateUser: FC<{ token: string }> = ({ token }) => {
         setError("");
       } else {
         const responseData = await res.json();
-        setError(responseData.errors);
+        setError(responseData);
+        setResponse('')
       }
     } catch (error) {
       setError(error);

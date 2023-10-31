@@ -6,18 +6,18 @@ class ApiService {
     return response;
   }
   async create(username: string, email: string, password: string) {
-    const rows = await db.findUserByName(username);
-    if (rows[0]) {
+    const [user] = await db.findUserByName(username);
+    if (user) {
       throw new Error("User already exist");
     }
 
     var salt = bcrypt.genSaltSync(8);
     var hashPassword = bcrypt.hashSync(password, salt);
 
-    const [user] = await db.createUser(username, email, hashPassword, "user");
-    const [action] = await db.addAction(user.id, "create");
+    const [props] = await db.createUser(username, email, hashPassword, "user");
+    const [action] = await db.addAction(props.id, "create");
     
-    return { id: action.id, user_id: user.id };
+    return { id: action.id, user_id: props.id };
   }
   async edit(
     id: string,

@@ -65,26 +65,12 @@ class BodyValidator {
     });
   }
   private if(field: Field) {
-    if (field == "email")
-      return body(field)
-        .if(body(field).notEmpty())
-        .isLength({ min: 4, max: 15 })
-        .withMessage(
-          `${this.capitalizeFirstChar(
-            field
-          )} must be between 4 and 15 characters`
-        )
-        .isEmail()
-        .withMessage("Invalid email format");
-    if (field == "username")
-      return body(field)
-        .if(body(field).notEmpty())
-        .isLength({ min: 4, max: 15 })
-        .withMessage(
-          `${this.capitalizeFirstChar(
-            field
-          )} must be between 4 and 15 characters`
-        );
+    return body(field)
+      .if(body(field).notEmpty())
+      .isLength({ min: 4, max: 15 })
+      .withMessage(
+        `${this.capitalizeFirstChar(field)} must be between 4 and 15 characters`
+      );
   }
 
   login() {
@@ -93,8 +79,13 @@ class BodyValidator {
   registration() {
     return [this.rules.username, this.rules.password, this.rules.email];
   }
-  edit(req: Request) {
-    return [this.rules.id, this.checkOneOf("username", "email"), this.if('username'),this.if('email')];
+  edit() {
+    return [
+      this.rules.id,
+      this.checkOneOf("username", "email"),
+      this.if("username"),
+      this.if("email").isEmail().withMessage('Ivalid email format'),
+    ];
   }
   result(req: Request) {
     const errors = validationResult(req);

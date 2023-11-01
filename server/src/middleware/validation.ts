@@ -1,8 +1,9 @@
-import { ValidationChain, body, oneOf } from "express-validator";
+import { ValidationChain, body, oneOf, validationResult } from "express-validator";
 import { IsEmptyOptions } from "express-validator/src/options.js";
 
 
 type ValidatorOptions = "username" | "password" | "email" | "id";
+
 
 type ValidatorMethod = {
   [key: string]: (options?: IsEmptyOptions | undefined) => ValidationChain;
@@ -67,6 +68,10 @@ class BodyValidator {
   }
   edit() {
     return [this.rules.id,this.checkOneOf('username','email'),this.rules.email,this.rules.username]
+  }
+  result(req:Request) {
+    const errors = validationResult(req);
+    return errors
   }
 }
 

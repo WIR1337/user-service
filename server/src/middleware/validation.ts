@@ -1,22 +1,30 @@
 import { Request } from "express";
-import { ValidationChain, body, oneOf, validationResult } from "express-validator";
+import {
+  ValidationChain,
+  body,
+  oneOf,
+  validationResult,
+} from "express-validator";
 import { IsEmptyOptions } from "express-validator/src/options.js";
 
-type ValidatorOptions = "username" | "password" | "email" | "id";
-
+type Field = "username" | "password" | "email" | "id";
 
 type ValidatorMethod = {
   [key: string]: (options?: IsEmptyOptions | undefined) => ValidationChain;
 };
-
 class BodyValidator {
-  private rules: Record<ValidatorOptions, ValidationChain>;
+  private rules: Record<Field, ValidationChain>;
 
   constructor() {
     this.rules = {
       username: this.fieldRule("username", 4, 15),
       password: this.fieldRule("password", 4, 15),
-      email: this.fieldRule("email", 4, 15, ["isEmail"], ["Invalid email format"]
+      email: this.fieldRule(
+        "email",
+        4,
+        15,
+        ["isEmail"],
+        ["Invalid email format"]
       ),
       id: this.fieldRule("id", 1, 5, ["isNumeric"], ["ID must be a number"]),
     };
@@ -24,10 +32,8 @@ class BodyValidator {
   private capitalizeFirstChar(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
- 
-
   private fieldRule(
-    field: ValidatorOptions,
+    field: Field,
     min: number,
     max: number,
     validators?: string[],
@@ -53,11 +59,32 @@ class BodyValidator {
 
     return rule;
   }
-
-  private checkOneOf(one:ValidatorOptions,two:ValidatorOptions) {
+  private checkOneOf(one: Field, two: Field) {
     return oneOf([body(one).notEmpty(), body(two).notEmpty()], {
       message: `${one} or ${two} are required`,
-    })
+    });
+  }
+  private if(field: Field) {
+    if (field == "email")
+      return body(field)
+        .if(body(field).notEmpty())
+        .isLength({ min: 4, max: 15 })
+        .withMessage(
+          `${this.capitalizeFirstChar(
+            field
+          )} must be between 4 and 15 characters`
+        )
+        .isEmail()
+        .withMessage("Invalid email format");
+    if (field == "username")
+      return body(field)
+        .if(body(field).notEmpty())
+        .isLength({ min: 4, max: 15 })
+        .withMessage(
+          `${this.capitalizeFirstChar(
+            field
+          )} must be between 4 and 15 characters`
+        );
   }
 
   login() {
@@ -66,16 +93,16 @@ class BodyValidator {
   registration() {
     return [this.rules.username, this.rules.password, this.rules.email];
   }
-  edit() {
-    return [this.rules.id,this.checkOneOf('username','email'),this.rules.email,this.rules.username]
+  edit(req: Request) {
+    return [this.rules.id, this.checkOneOf("username", "email"), this.if('username'),this.if('email')];
   }
-  result(req:Request) {
+  result(req: Request) {
     const errors = validationResult(req);
     var messages = [];
     if (!errors.isEmpty()) {
       messages = errors.array().map((error) => error.msg);
     }
-    return messages
+    return messages;
   }
 }
 

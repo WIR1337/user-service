@@ -1,6 +1,6 @@
+import { Request } from "express";
 import { ValidationChain, body, oneOf, validationResult } from "express-validator";
 import { IsEmptyOptions } from "express-validator/src/options.js";
-
 
 type ValidatorOptions = "username" | "password" | "email" | "id";
 
@@ -21,12 +21,12 @@ class BodyValidator {
       id: this.fieldRule("id", 1, 5, ["isNumeric"], ["ID must be a number"]),
     };
   }
-  capitalizeFirstChar(str: string) {
+  private capitalizeFirstChar(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
  
 
-  fieldRule(
+  private fieldRule(
     field: ValidatorOptions,
     min: number,
     max: number,
@@ -54,7 +54,7 @@ class BodyValidator {
     return rule;
   }
 
-  checkOneOf(one:ValidatorOptions,two:ValidatorOptions) {
+  private checkOneOf(one:ValidatorOptions,two:ValidatorOptions) {
     return oneOf([body(one).notEmpty(), body(two).notEmpty()], {
       message: `${one} or ${two} are required`,
     })
@@ -71,7 +71,11 @@ class BodyValidator {
   }
   result(req:Request) {
     const errors = validationResult(req);
-    return errors
+    var messages = [];
+    if (!errors.isEmpty()) {
+      messages = errors.array().map((error) => error.msg);
+    }
+    return messages
   }
 }
 

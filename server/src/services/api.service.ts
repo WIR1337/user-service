@@ -1,5 +1,6 @@
-import bcrypt from "bcryptjs";
+
 import db from "../database/queries/admin.queries.js";
+import crypto from '../utils/bcrypt.js';
 class ApiService {
   async users() {
     const response = await db.getUsers();
@@ -11,10 +12,10 @@ class ApiService {
       throw new Error("User already exist");
     }
 
-    var salt = bcrypt.genSaltSync(8);
-    var hashPassword = bcrypt.hashSync(password, salt);
+    
+    const hashedPassword = crypto.createHash(password);
 
-    const [props] = await db.createUser(username, email, hashPassword, "user");
+    const [props] = await db.createUser(username, email, hashedPassword, "user");
     const [action] = await db.addAction(props.id, "create");
     
     return { id: action.id, user_id: props.id };

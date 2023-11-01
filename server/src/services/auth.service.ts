@@ -1,6 +1,7 @@
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import db from "../database/queries/admin.queries.js";
 import { generateAccessToken } from "../middleware/auth.js";
+import crypto from "../utils/bcrypt.js";
 
 class AuthService {
   async login(username: string, password: string) {
@@ -11,7 +12,7 @@ class AuthService {
 
     const [hashed] = await db.getHashedPassword(username);
     
-    const validPassword = bcrypt.compareSync(password, hashed.password);
+    const validPassword = crypto.comparePasswords(password, hashed.password);
 
     if (!validPassword) {
       throw new Error("Incorrect password");
@@ -26,13 +27,12 @@ class AuthService {
     if (user) {
       throw new Error("User already exist");
     }
-    // create separate functin ?
-    var salt = bcrypt.genSaltSync(8);
-    var hashPassword = bcrypt.hashSync(password, salt);
+    
+    const hashedPassword = crypto.createHash(password);
 
     const role = "admin";
 
-    const [props] = await db.createUser(username, email, hashPassword, role);
+    const [props] = await db.createUser(username, email, hashedPassword, role);
     const token = generateAccessToken(username, props.id, role);
 
     return {

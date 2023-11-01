@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { validationResult } from "express-validator";
+import BodyValidator from '../middleware/validation.js';
 import ApiService from "../services/api.service.js";
 class ApiController {
   async users(req: Request, res: Response) {
@@ -11,10 +11,10 @@ class ApiController {
     }
   }
   async create(req: Request, res: Response) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const errorMessages = errors.array().map((error) => error.msg);
-      return res.status(400).json({ errors: errorMessages });
+    const errors = BodyValidator.result(req);
+    console.log({errors})
+    if (errors[0]) {
+      return res.status(400).json({ errors });
     }
 
     const { username, email, password } = req.body;
@@ -32,10 +32,9 @@ class ApiController {
     }
   }
   async edit(req: Request, res: Response) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const errorMessages = errors.array().map((error) => error.msg);
-      return res.status(400).json({ errors: errorMessages });
+    const errors = BodyValidator.result(req);
+    if (errors[0]) {
+      return res.status(400).json({ errors });
     }
     const { id, username, email } = req.body;
 

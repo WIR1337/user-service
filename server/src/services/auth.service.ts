@@ -1,5 +1,4 @@
-// import bcrypt from "bcryptjs";
-import db from "../database/queries/admin.queries.js";
+import db from "../database/queries.js";
 import { generateAccessToken } from "../middleware/auth.js";
 import crypto from "../utils/bcrypt.js";
 
@@ -9,11 +8,10 @@ class AuthService {
     if (!user) {
       throw new Error("User doesn't exist");
     }
-
-    const [hashed] = await db.getHashedPassword(username);
     
+    const [hashed] = await db.getHashedPassword(username);
     const validPassword = crypto.comparePasswords(password, hashed.password);
-
+    
     if (!validPassword) {
       throw new Error("Incorrect password");
     }

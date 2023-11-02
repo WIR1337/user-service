@@ -1,11 +1,11 @@
 import { QueryResult } from "pg";
-import { Action, ActionID, PropsToEdit } from "../../types/actions.js";
-import { HashedPassword, User, UserID, role } from "../../types/user.js";
+import { Action, ActionID, PropsToEdit } from "../types/actions.js";
+import { HashedPassword, User, UserID, role } from "../types/user.js";
 import {
   generateActionMessage,
   generateEditingQuery,
-} from "../../utils/db.utils.js";
-import pool from "../index.js";
+} from "../utils/db.utils.js";
+import pool from "./index.js";
 
 class DB {
   async getHashedPassword(name: string) {

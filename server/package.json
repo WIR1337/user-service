@@ -32,6 +32,7 @@
     "@types/jsonwebtoken": "^9.0.4",
     "@types/pg": "^8.10.7",
     "nodemon": "^3.0.1",
+    "prisma": "^5.5.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }

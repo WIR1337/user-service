@@ -13,6 +13,7 @@ class AuthController {
       const data = await AuthService.login(username, password);
       res.status(200).json(data);
     } catch (err: any) {
+      // i think i can simplify this logic
       if (err.message == "User doesn't exist") {
         return res.status(409).json({ error: `User ${username} is not found` });
       } else if (err.message == "Incorrect password") {

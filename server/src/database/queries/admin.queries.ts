@@ -39,7 +39,7 @@ class DB {
   }
   async getUsers() {
     const response: QueryResult<User> = await pool.query(
-      "select users.id, users.username,users.email,users.password, users.role,TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users ORDER BY users.id ASC"
+      "SELECT U.id, U.username,U.email,U.password, U.role,TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users U ORDER BY U.id ASC"
     );
     return response.rows;
   }

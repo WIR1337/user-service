@@ -6,6 +6,7 @@ import auth from "./routes/auth.router.js";
 
 const PORT = 8000;
 const app = express();
+
 app.use(cors())
 app.use(express.json());
 

@@ -4,14 +4,15 @@ import crypto from "../utils/bcrypt.js";
 
 class AuthService {
   async login(username: string, password: string) {
-    const [user] = await db.findUserByName(username);
+    const user = await db.findUserByName(username);
+
     if (!user) {
-      throw new Error("User doesn't exist");
+      throw new Error("No users found");
     }
-    
-    const [hashed] = await db.getHashedPassword(username);
+
+    const hashed = await db.getHashedPassword(username);
     const validPassword = crypto.comparePasswords(password, hashed.password);
-    
+
     if (!validPassword) {
       throw new Error("Incorrect password");
     }
@@ -21,23 +22,25 @@ class AuthService {
     return { token };
   }
   async registration(username: string, email: string, password: string) {
-    const [user] = await db.findUserByName(username);
+    const user = await db.findUserByName(username);
+    console.log({ user });
     if (user) {
       throw new Error("User already exist");
     }
-    
+
     const hashedPassword = crypto.createHash(password);
 
     const role = "admin";
 
-    const [props] = await db.createUser(username, email, hashedPassword, role);
-    const token = generateAccessToken(username, props.id, role);
+    const created_user = await db.createUser(
+      username,
+      email,
+      hashedPassword,
+      role
+    );
+    const token = generateAccessToken(created_user.username, created_user.id, created_user.role);
 
-    return {
-      message: "User has been successfully registered",
-      token,
-      user,
-    };
+    return { token };
   }
 }
 

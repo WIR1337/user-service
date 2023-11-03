@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import BodyValidator from '../middleware/validation.js';
+import BodyValidator from "../middleware/validation.js";
 import AuthService from "../services/auth.service.js";
 class AuthController {
   async login(req: Request, res: Response) {
@@ -8,22 +8,24 @@ class AuthController {
       return res.status(400).json({ errors });
     }
     const { username, password } = req.body;
-    
+
     try {
+      console.log({ username, password });
       const data = await AuthService.login(username, password);
       res.status(200).json(data);
     } catch (err: any) {
-      // i think i can simplify this logic
-      if (err.message == "User doesn't exist") {
-        return res.status(409).json({ error: `User ${username} is not found` });
+      // turn error into class ?
+      if (err.message == "No users found") {
+        return res.status(409).json({ message: err.message });
       } else if (err.message == "Incorrect password") {
-        return res.status(409).json({ error: `Incorrect password` });
+        return res.status(409).json({ message: err.message });
       }
-      res.status(500).json(err);
+      res.status(500).json({ message: err.message });
     }
   }
   async registration(req: Request, res: Response) {
     const errors = BodyValidator.result(req);
+
     if (errors[0]) {
       return res.status(400).json({ errors });
     }
@@ -37,9 +39,9 @@ class AuthController {
       if (err.message == "User already exist") {
         return res
           .status(409)
-          .json({ error: "User with the same username already exists." });
+          .json({message: err.message});
       }
-      res.status(500).json(err);
+      res.status(500).json({message: err.message});
     }
   }
 }

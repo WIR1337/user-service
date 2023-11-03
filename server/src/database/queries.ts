@@ -1,62 +1,66 @@
-import { QueryResult } from "pg";
-import { Action, ActionID, PropsToEdit } from "../types/actions.js";
-import { HashedPassword, User, UserID, role } from "../types/user.js";
+import { PrismaClient } from '@prisma/client';
+import { Action, PropsToEdit } from "../types/actions.js";
+import { role } from "../types/user.js";
 import {
   generateActionMessage,
   generateEditingQuery,
 } from "../utils/db.utils.js";
-import pool from "./index.js";
+const prisma = new PrismaClient()
 
 class DB {
-  async getHashedPassword(name: string) {
-    const response: QueryResult<HashedPassword> = await pool.query(
-      "SELECT password FROM users WHERE username = $1",
-      [name]
-    );
-
-    return response.rows;
+  async getHashedPassword(username: string) {
+    const response = await prisma.users.findFirstOrThrow({
+      where: { username },
+      select: { password: true },
+    });
+    return response;
   }
-  async findUserByName(name: string) {
-    const response: QueryResult<User> = await pool.query(
-      "SELECT * FROM users WHERE username = $1",
-      [name]
-    );
-    return response.rows;
+  async findUserByName(username: string) {
+    const response = await prisma.users.findFirst({
+      where: { username },
+    });
+    return response;
   }
-  async findUserByID(id: string) {
-    const response: QueryResult<User> = await pool.query(
-      "SELECT * FROM users WHERE id = $1",
-      [id]
-    );
-    return response.rows;
+  async findUserByID(id: number) {
+    const response = await prisma.users.findFirstOrThrow({
+      where: { id },
+    });
+    return response;
   }
-  async createUser(name: string, email: string, password: string, role: role) {
-    const response: QueryResult<UserID> = await pool.query(
-      "INSERT INTO users(username, email,password, role) VALUES ($1,$2,$3,$4) RETURNING id",
-      [name, email, password, role]
-    );
-    return response.rows;
+  async createUser(username: string, email: string, password: string, role: role) {
+    const response = await prisma.users.create({
+      data: {username,email,password,role}
+    });
+    console.log({response})
+    return response;
   }
   async getUsers() {
-    const response: QueryResult<User> = await pool.query(
-      "SELECT U.id, U.username,U.email,U.password, U.role,TO_CHAR(created_at, 'HH24:MI:SS  DD.MM.YYYY') AS created_at from users U ORDER BY U.id ASC"
-    );
-    return response.rows;
+    const response = await prisma.users.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return response;
   }
   async editUser(
-    id: string,
+    id: number,
     name: string | undefined,
     email: string | undefined
   ) {
-    const response = await pool.query(generateEditingQuery(id, name, email));
+    const data = generateEditingQuery(name, email);
+    const response = await prisma.users.update({ where: { id }, data });
+    return response;
   }
-  async addAction(id: string | number, action: Action, params?: PropsToEdit) {
-    const response: QueryResult<ActionID> = await pool.query(
-      "INSERT INTO users_actions (user_id, action_type, action_data) VALUES ($1,$2,$3) RETURNING id",
-      [id, action, generateActionMessage(action, params)]
-    );
-
-    return response.rows;
+  async addAction(id: number, action: Action, params?: PropsToEdit) {
+    const response = await prisma.users_actions.create({
+      data: {
+        user_id: id,
+        action_type: action,
+        action_data: generateActionMessage(action, params),
+      },
+    });
+    console.log({response})
+    return response;
   }
 }
 

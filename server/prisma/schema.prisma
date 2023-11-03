@@ -13,25 +13,26 @@ model users {
   username   String          @db.VarChar(255)
   email      String          @db.VarChar(255)
   password   String          @db.VarChar(255)
-  role       Role            @default(user)
-  created_at DateTime?       @default(now()) @db.Timestamptz(6)
+  role       Role             @default(user)
+  created_at DateTime        @default(now()) @db.Timestamptz(6)
   actions    users_actions[]
 
   @@unique([id, email])
 }
 
 model users_actions {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   user_id     Int
-  action_type String    @db.VarChar(15)
+  action_type String   @db.VarChar(15)
   action_data Json
-  action_time DateTime? @default(now()) @db.Timestamptz(6)
+  action_time DateTime @default(now()) @db.Timestamptz(6)
   users       users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([id])
 }
 
+
 enum Role {
-  user
-  admin
+user
+admin
 }

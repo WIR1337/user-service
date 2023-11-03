@@ -8,7 +8,7 @@ CREATE TABLE "users" (
     "email" VARCHAR(255) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'user',
-    "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -19,7 +19,7 @@ CREATE TABLE "users_actions" (
     "user_id" INTEGER NOT NULL,
     "action_type" VARCHAR(15) NOT NULL,
     "action_data" JSONB NOT NULL,
-    "action_time" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "action_time" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "users_actions_pkey" PRIMARY KEY ("id")
 );

@@ -12,7 +12,7 @@ class ApiController {
   }
   async create(req: Request, res: Response) {
     const errors = BodyValidator.result(req);
-    console.log({errors})
+    
     if (errors[0]) {
       return res.status(400).json({ errors });
     }
@@ -39,7 +39,7 @@ class ApiController {
     const { id, username, email } = req.body;
 
     try {
-      const data = await ApiService.edit(id, username,email);
+      const data = await ApiService.edit(Number(id), username,email);
       res
         .status(200)
         .json({ message: "User data has been successfully updated" , id: data.id});

@@ -49,13 +49,11 @@ class DB {
     const response = await prisma.users.create({
       data: {username,email,password,role}
     });
-    console.log({response})
     return response;
   }
   async updateUser(id: number,name: string | undefined,email: string | undefined
   ) {
     const data = generateEditingQuery(name, email);
-    console.log({data})
     const response = await prisma.users.update({ where: { id }, data });
     return response;
   }

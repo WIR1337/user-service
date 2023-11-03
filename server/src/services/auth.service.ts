@@ -23,7 +23,6 @@ class AuthService {
   }
   async registration(username: string, email: string, password: string) {
     const user = await db.selectUserByName(username);
-    console.log({ user });
     if (user) {
       throw new Error("User already exist");
     }

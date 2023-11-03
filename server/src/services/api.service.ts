@@ -9,20 +9,18 @@ class ApiService {
     const user = await db.findUserByName(username);
     
     if (user) {
-      console.log('user if')
       throw new Error("User already exist");
     }
 
     const hashedPassword = crypto.createHash(password);
 
-    console.log('before create')
     const created_user = await db.createUser(
       username,
       email,
       hashedPassword,
       "user"
     );
-    console.log('before action')
+
     const action = await db.addAction(created_user.id, "create");
 
     return { id: action.id, user_id: created_user.id };
@@ -37,11 +35,11 @@ class ApiService {
       throw new Error("User doesn't exist");
     }
 
-    await db.editUser(id, username, email);
+    const updatedUser = await db.editUser(id, username, email);
 
     const params = {
-      username,
-      email,
+      username: updatedUser.username,
+      email: updatedUser.email,
       prevName: user.username,
       prevEmail: user.email,
     };

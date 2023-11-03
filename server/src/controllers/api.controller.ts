@@ -6,8 +6,8 @@ class ApiController {
     try {
       const data = await ApiService.users();
       res.status(200).json(data);
-    } catch (err) {
-      res.status(500).json(err);
+    } catch (err:any) {
+      res.status(500).json({message: err.message});
     }
   }
   async create(req: Request, res: Response) {
@@ -21,14 +21,14 @@ class ApiController {
 
     try {
       const {id,user_id} = await ApiService.create(username, email, password);
-      res.status(200).json({ message: "User has been successfully created" , id, user_id});
+      res.status(200).json({ id, user_id});
     } catch (err: any) {
       if (err.message == "User already exist") {
         return res
           .status(409)
-          .json({ error: "User with the same username already exists." });
+          .json({ message: err.message });
       }
-      res.status(500).json(err);
+      res.status(500).json({message: err.message});
     }
   }
   async edit(req: Request, res: Response) {
@@ -42,14 +42,14 @@ class ApiController {
       const data = await ApiService.edit(Number(id), username,email);
       res
         .status(200)
-        .json({ message: "User data has been successfully updated" , id: data.id});
+        .json({ id: data.id});
     } catch (err: any) {
       if (err.message == "User doesn't exist") {
         return res
           .status(409)
-          .json({ error: "User with this ID doesn't exists." });
+          .json({ message: err.message });
       }
-      res.status(500).json(err);
+      res.status(500).json({message: err.message});
     }
   }
 }

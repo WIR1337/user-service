@@ -14,7 +14,6 @@ class AuthController {
       const data = await AuthService.login(username, password);
       res.status(200).json(data);
     } catch (err: any) {
-      // turn error into class ?
       if (err.message == "No users found") {
         return res.status(409).json({ message: err.message });
       } else if (err.message == "Incorrect password") {

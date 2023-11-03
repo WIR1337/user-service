@@ -27,7 +27,7 @@ class DB {
     });
     return response;
   }
-  async createUser(username: string, email: string, password: string, role: role) {
+  async createUser(username: string, email: string, password: string, role?: role) {
     const response = await prisma.users.create({
       data: {username,email,password,role}
     });
@@ -48,6 +48,7 @@ class DB {
     email: string | undefined
   ) {
     const data = generateEditingQuery(name, email);
+    console.log({data})
     const response = await prisma.users.update({ where: { id }, data });
     return response;
   }
@@ -59,7 +60,6 @@ class DB {
         action_data: generateActionMessage(action, params),
       },
     });
-    console.log({response})
     return response;
   }
 }

@@ -1,11 +1,11 @@
 import { Action, PropsToEdit } from "../types/actions.js";
 export function generateEditingQuery(
-  name: string | undefined,
+  username: string | undefined,
   email: string | undefined
 ) {
-  var data: { name?: string; email?: string } = {};
+  var data: { username?: string; email?: string } = {};
 
-  if (name) data.name = name;
+  if (username) data.username = username;
   if (email) data.email = email;
 
   return data;

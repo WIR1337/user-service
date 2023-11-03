@@ -8,6 +8,6 @@ const router = Router();
 
 router.get("/users", validateRole('admin'), ApiController.users);
 router.post("/create", validateRole('admin'),BodyValidator.registration(),ApiController.create);
-router.put("/edit", validateRole('admin'),BodyValidator.edit(),ApiController.edit);
+router.put("/update", validateRole('admin'),BodyValidator.update(),ApiController.update);
 
 export default router;

@@ -25,7 +25,7 @@ class ApiService {
 
     return { action_id: action.id, created_user };
   }
-  async edit(
+  async update(
     id: number,
     username: string | undefined,
     email: string | undefined

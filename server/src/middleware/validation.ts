@@ -79,7 +79,7 @@ class BodyValidator {
   registration() {
     return [this.rules.username, this.rules.password, this.rules.email];
   }
-  edit() {
+  update() {
     return [
       this.rules.id,
       this.checkOneOf("username", "email"),

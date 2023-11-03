@@ -4,8 +4,8 @@ import ApiService from "../services/api.service.js";
 class ApiController {
   async users(req: Request, res: Response) {
     try {
-      const data = await ApiService.users();
-      res.status(200).json(data);
+      const users = await ApiService.users();
+      res.status(200).json(users);
     } catch (err:any) {
       res.status(500).json({message: err.message});
     }
@@ -20,8 +20,9 @@ class ApiController {
     const { username, email, password } = req.body;
 
     try {
-      const {id,user_id} = await ApiService.create(username, email, password);
-      res.status(200).json({ id, user_id});
+      const {action_id,created_user} = await ApiService.create(username, email, password);
+
+      res.status(200).json({ action_id, created_user});
     } catch (err: any) {
       if (err.message == "User already exist") {
         return res
@@ -39,15 +40,13 @@ class ApiController {
     const { id, username, email } = req.body;
 
     try {
-      const data = await ApiService.edit(Number(id), username,email);
-      res
-        .status(200)
-        .json({ id: data.id});
+      const {action_id,updatedUser} = await ApiService.edit(Number(id), username,email);
+      
+      res.status(200).json({ action_id,updatedUser});
+
     } catch (err: any) {
       if (err.message == "User doesn't exist") {
-        return res
-          .status(409)
-          .json({ message: err.message });
+        return res.status(409).json({ message: err.message });
       }
       res.status(500).json({message: err.message});
     }

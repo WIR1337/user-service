@@ -7,7 +7,7 @@ class ApiService {
   }
   async create(username: string, email: string, password: string) {
     const user = await db.selectUserByName(username);
-    
+
     if (user) {
       throw new Error("User already exist");
     }
@@ -23,7 +23,7 @@ class ApiService {
 
     const action = await db.insertAction(created_user.id, "create");
 
-    return { id: action.id, user_id: created_user.id };
+    return { action_id: action.id, created_user };
   }
   async edit(
     id: number,
@@ -45,7 +45,7 @@ class ApiService {
     };
 
     const action = await db.insertAction(id, "update", params);
-    return { id: action.id };
+    return { action_id: action.id, updatedUser };
   }
 }
 

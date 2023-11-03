@@ -11,8 +11,8 @@ class AuthController {
 
     try {
       console.log({ username, password });
-      const data = await AuthService.login(username, password);
-      res.status(200).json(data);
+      const token = await AuthService.login(username, password);
+      res.status(200).json(token);
     } catch (err: any) {
       if (err.message == "No users found") {
         return res.status(409).json({ message: err.message });
@@ -32,8 +32,8 @@ class AuthController {
     const { username, email, password } = req.body;
 
     try {
-      const data = await AuthService.registration(username, email, password);
-      res.status(201).json(data);
+      const token = await AuthService.registration(username, email, password);
+      res.status(201).json(token);
     } catch (err: any) {
       if (err.message == "User already exist") {
         return res

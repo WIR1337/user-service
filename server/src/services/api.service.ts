@@ -2,11 +2,11 @@ import db from "../database/queries.js";
 import crypto from "../utils/bcrypt.js";
 class ApiService {
   async users() {
-    const users = await db.getUsers();
+    const users = await db.selectUsers();
     return users;
   }
   async create(username: string, email: string, password: string) {
-    const user = await db.findUserByName(username);
+    const user = await db.selectUserByName(username);
     
     if (user) {
       throw new Error("User already exist");
@@ -14,14 +14,14 @@ class ApiService {
 
     const hashedPassword = crypto.createHash(password);
 
-    const created_user = await db.createUser(
+    const created_user = await db.insertUser(
       username,
       email,
       hashedPassword,
       "user"
     );
 
-    const action = await db.addAction(created_user.id, "create");
+    const action = await db.insertAction(created_user.id, "create");
 
     return { id: action.id, user_id: created_user.id };
   }
@@ -30,12 +30,12 @@ class ApiService {
     username: string | undefined,
     email: string | undefined
   ) {
-    const user = await db.findUserByID(id);
+    const user = await db.selectUserByID(id);
     if (!user) {
       throw new Error("User doesn't exist");
     }
 
-    const updatedUser = await db.editUser(id, username, email);
+    const updatedUser = await db.updateUser(id, username, email);
 
     const params = {
       username: updatedUser.username,
@@ -44,7 +44,7 @@ class ApiService {
       prevEmail: user.email,
     };
 
-    const action = await db.addAction(id, "update", params);
+    const action = await db.insertAction(id, "update", params);
     return { id: action.id };
   }
 }

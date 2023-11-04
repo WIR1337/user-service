@@ -1,7 +1,7 @@
 # Description
 Express server with WebSocket
 
-CRUD api , JWT auth , Prisma 
+to be continued ...
 
 ## Installation
 - Clone this repo :

@@ -8,18 +8,20 @@ CRUD api , JWT auth , Prisma
 ```ssh
 git clone git@github.com:WIR1337/user-service.git
 ```
-- Set environment variables for Postgres and Prisma:
+- Create .env file
 ```ssh
 cd user-service
 touch server/.env
-
-# set variable for postgres
+```
+- Set environment variables for Postgres and Prisma in created .env file:
+```ssh
+# set variable for Postgres
 HOST
 PORT
 DATABASE
 USER
 
-# set url to DB for prisma client
+# set url to Postgres for prisma client
 # https://www.prisma.io/docs/reference/database-reference/connection-urls
 
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
@@ -28,7 +30,6 @@ Create tables :
 
 ```ssh
 Comming soon
-
 ```
 
 

@@ -1,4 +1,5 @@
-import { Action, PropsToEdit } from "../types/actions.js";
+import { Action, PropsToEdit } from "@types";
+
 export function generateEditingQuery(
   username: string | undefined,
   email: string | undefined

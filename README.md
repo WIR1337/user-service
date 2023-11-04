@@ -1,5 +1,7 @@
 # Description
-Coming soon
+Express server with WebSocket
+
+CRUD api , JWT auth , Prisma 
 
 ## Installation
 - Fork this repo and then clone your fork to an empty local directory and run :

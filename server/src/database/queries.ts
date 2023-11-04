@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client';
-import { Action, PropsToEdit } from "../types/actions.js";
-import { role } from "../types/user.js";
+import { PrismaClient } from "@prisma/client";
+import { Action, PropsToEdit, role } from "@types";
+
 import {
   generateActionMessage,
   generateEditingQuery,
 } from "../utils/db.utils.js";
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 class DB {
   async selectHashedPassword(username: string) {
@@ -45,19 +45,26 @@ class DB {
     });
     return response;
   }
-  async insertUser(username: string, email: string, password: string, role?: role) {
+  async insertUser(
+    username: string,
+    email: string,
+    password: string,
+    role?: role
+  ) {
     const response = await prisma.users.create({
-      data: {username,email,password,role}
+      data: { username, email, password, role },
     });
     return response;
   }
-  async updateUser(id: number,name: string | undefined,email: string | undefined
+  async updateUser(
+    id: number,
+    name: string | undefined,
+    email: string | undefined
   ) {
     const data = generateEditingQuery(name, email);
     const response = await prisma.users.update({ where: { id }, data });
     return response;
   }
- 
 }
 
 export default new DB();

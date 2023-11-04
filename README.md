@@ -4,7 +4,35 @@ Express server with WebSocket
 CRUD api , JWT auth , Prisma 
 
 ## Installation
-- Fork this repo and then clone your fork to an empty local directory and run :
+- Clone this repo :
+```ssh
+git clone git@github.com:WIR1337/user-service.git
+```
+- Set environment variables for Postgres and Prisma:
+```ssh
+cd user-service
+touch server/.env
+
+# set variable for postgres
+HOST
+PORT
+DATABASE
+USER
+
+# set url to DB for prisma client
+# https://www.prisma.io/docs/reference/database-reference/connection-urls
+
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
+```
+Create tables :
+
+```ssh
+Comming soon
+
+```
+
+
+- Run :
 ```ssh
 npm install
 ```

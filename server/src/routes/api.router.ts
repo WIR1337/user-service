@@ -1,8 +1,8 @@
 import { Router } from "express";
 import ApiController from "../controllers/api.controller.js";
-import { validateRole } from "../middleware/role.js";
+import { validateRole } from "../middleware/RoleValidator.js";
 
-import BodyValidator from "../middleware/validation.js";
+import BodyValidator from "../middleware/BodyValidator.js";
 
 const router = Router();
 

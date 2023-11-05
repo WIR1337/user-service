@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import BodyValidator from '../middleware/validation.js';
 import ApiService from "../services/api.service.js";
 class ApiController {
   async users(req: Request, res: Response) {
+
+    // remove trycatch by creating Middleware for Error handlong
     try {
       const users = await ApiService.users();
       res.status(200).json(users);
@@ -11,17 +12,18 @@ class ApiController {
     }
   }
   async create(req: Request, res: Response) {
-    const errors = BodyValidator.result(req);
-    
-    if (errors[0]) {
-      return res.status(400).json({ errors });
-    }
+    // this is part of validation
+
+    // const errors = BodyValidator.result(req);
+    // if (errors[0]) {
+      // return res.status(400).json({ errors });
+    // }
 
     const { username, email, password } = req.body;
 
+    // remove trycatch by creating Middleware for Error handlong
     try {
       const {action_id,created_user} = await ApiService.create(username, email, password);
-
       res.status(200).json({ action_id, created_user});
     } catch (err: any) {
       if (err.message == "User already exist") {
@@ -33,13 +35,18 @@ class ApiController {
     }
   }
   async update(req: Request, res: Response) {
-    const errors = BodyValidator.result(req);
-    if (errors[0]) {
-      return res.status(400).json({ errors });
-    }
+    // this is part of validation
+
+    // const errors = BodyValidator.result(req);
+    // if (errors[0]) {
+      // return res.status(400).json({ errors });
+    // }
     const { id, username, email } = req.body;
 
+
+    // remove trycatch by creating Middleware for Error handlong
     try {
+      // Number(id) must be removed and checked in validation
       const {action_id,updatedUser} = await ApiService.update(Number(id), username,email);
       
       res.status(200).json({ action_id,updatedUser});

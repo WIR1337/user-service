@@ -1,5 +1,5 @@
 import db from "../database/queries.js";
-import crypto from "../utils/bcrypt.js";
+import crypto from "../utils/bcrypt.utils..js";
 class ApiService {
   async users() {
     const users = await db.selectUsers();

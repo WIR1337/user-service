@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { role } from "../types/user.js";
-import JWT from "../utils/jwt.js";
+import JWT from "../utils/jwt.utils.js";
 
 export const validateRole = (userRole: role) => {
   return function (req: Request, res: Response, next: NextFunction) {

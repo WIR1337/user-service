@@ -1,6 +1,6 @@
 import db from "../database/queries.js";
-import crypto from "../utils/bcrypt.js";
-import JWT from '../utils/jwt.js';
+import crypto from "../utils/bcrypt.utils..js";
+import JWT from '../utils/jwt.utils.js';
 
 class AuthService {
   async login(username: string, password: string) {

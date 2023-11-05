@@ -1,6 +1,6 @@
 import db from "../database/queries.js";
-import { generateAccessToken } from "../middleware/auth.js";
 import crypto from "../utils/bcrypt.js";
+import JWT from '../utils/jwt.js';
 
 class AuthService {
   async login(username: string, password: string) {
@@ -17,7 +17,7 @@ class AuthService {
       throw new Error("Incorrect password");
     }
 
-    const token = generateAccessToken(username, user.id, user.role);
+    const token = JWT.generateAccessToken(username, user.id, user.role);
 
     return { token };
   }
@@ -37,7 +37,7 @@ class AuthService {
       hashedPassword,
       role
     );
-    const token = generateAccessToken(created_user.username, created_user.id, created_user.role);
+    const token = JWT.generateAccessToken(created_user.username, created_user.id, created_user.role);
 
     return { token };
   }

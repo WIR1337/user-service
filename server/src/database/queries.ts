@@ -9,26 +9,26 @@ const prisma = new PrismaClient();
 
 class DB {
   async selectHashedPassword(username: string) {
-    const response = await prisma.users.findFirstOrThrow({
+    const response = prisma.users.findFirstOrThrow({
       where: { username },
       select: { password: true },
     });
     return response;
   }
   async selectUserByName(username: string) {
-    const response = await prisma.users.findFirst({
+    const response = prisma.users.findFirst({
       where: { username },
     });
     return response;
   }
   async selectUserByID(id: number) {
-    const response = await prisma.users.findFirstOrThrow({
+    const response = prisma.users.findFirstOrThrow({
       where: { id },
     });
     return response;
   }
   async selectUsers() {
-    const response = await prisma.users.findMany({
+    const response = prisma.users.findMany({
       orderBy: {
         id: "asc",
       },
@@ -36,7 +36,7 @@ class DB {
     return response;
   }
   async insertAction(id: number, action: Action, params?: PropsToEdit) {
-    const response = await prisma.users_actions.create({
+    const response = prisma.users_actions.create({
       data: {
         user_id: id,
         action_type: action,
@@ -51,7 +51,7 @@ class DB {
     password: string,
     role?: role
   ) {
-    const response = await prisma.users.create({
+    const response = prisma.users.create({
       data: { username, email, password, role },
     });
     return response;

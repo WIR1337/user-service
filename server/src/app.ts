@@ -12,3 +12,9 @@ app.use(express.json());
 app.use("/auth", auth);
 app.use("/api", api);
 
+
+/*
+middleware with ErrorHandling
+app.use(ErrorHandler)
+*/
+

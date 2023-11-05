@@ -6,11 +6,13 @@ class ApiService {
     return users;
   }
   async create(username: string, email: string, password: string) {
-    const user = await db.selectUserByName(username);
+    // This is part of validation
 
-    if (user) {
-      throw new Error("User already exist");
-    }
+    // const user = await db.selectUserByName(username);
+
+    // if (user) {
+    //   throw new Error("User already exist");
+    // }
 
     const hashedPassword = crypto.createHash(password);
 
@@ -21,6 +23,7 @@ class ApiService {
       "user"
     );
 
+    // why i waiting here ?
     const action = await db.insertAction(created_user.id, "create");
 
     return { action_id: action.id, created_user };
@@ -30,21 +33,24 @@ class ApiService {
     username: string | undefined,
     email: string | undefined
   ) {
-    const user = await db.selectUserByID(id);
-    if (!user) {
-      throw new Error("User doesn't exist");
-    }
+
+    // This is part of validation
+    // const user = await db.selectUserByID(id);
+    // if (!user) {
+      // throw new Error("User doesn't exist");
+    // }
 
     const updatedUser = await db.updateUser(id, username, email);
 
+    // mess
     const params = {
       username: updatedUser.username,
       email: updatedUser.email,
-      prevName: user.username,
-      prevEmail: user.email,
+      prevName: username,
+      prevEmail: email,
     };
-
     const action = await db.insertAction(id, "update", params);
+
     return { action_id: action.id, updatedUser };
   }
 }

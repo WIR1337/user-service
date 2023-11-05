@@ -4,16 +4,18 @@ import JWT from '../utils/jwt.js';
 
 class AuthService {
   async login(username: string, password: string) {
+    // this is part of validation
+    // const user = await db.selectUserByName(username);
+    // if (!user) {
+      // throw new Error("No users found");
+    // }
+
+    // const user = await db.selectHashedPassword(username);
     const user = await db.selectUserByName(username);
-
-    if (!user) {
-      throw new Error("No users found");
-    }
-
-    const hashed = await db.selectHashedPassword(username);
-    const validPassword = crypto.comparePasswords(password, hashed.password);
+    const validPassword = crypto.comparePasswords(password, user.password);
 
     if (!validPassword) {
+      // i need a class for creating Errors
       throw new Error("Incorrect password");
     }
 
@@ -22,21 +24,16 @@ class AuthService {
     return { token };
   }
   async registration(username: string, email: string, password: string) {
-    const user = await db.selectUserByName(username);
-    if (user) {
-      throw new Error("User already exist");
-    }
+    // this is part of validation
+    // const user = await db.selectUserByName(username);
+    // if (user) {
+      // throw new Error("User already exist");
+    // }
 
     const hashedPassword = crypto.createHash(password);
-
     const role = "admin";
 
-    const created_user = await db.insertUser(
-      username,
-      email,
-      hashedPassword,
-      role
-    );
+    const created_user = await db.insertUser(username,email,hashedPassword,role);
     const token = JWT.generateAccessToken(created_user.username, created_user.id, created_user.role);
 
     return { token };

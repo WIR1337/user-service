@@ -18,15 +18,8 @@ class ApiController {
     res.status(200).json({ action_id, created_user });
   }
   async update(req: Request, res: Response) {
-    // this is part of validation
-
-    // const errors = BodyValidator.result(req);
-    // if (errors[0]) {
-    // return res.status(400).json({ errors });
-    // }
     const { id, username, email } = req.body;
 
-    // remove trycatch by creating Middleware for Error handlong
     try {
       // Number(id) must be removed and checked in validation
       const { action_id, updatedUser } = await ApiService.update(

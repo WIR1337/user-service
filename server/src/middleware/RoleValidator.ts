@@ -5,19 +5,23 @@ import JWT from "../utils/jwt.utils.js";
 
 export const validateRole = (requiredRole: role) => {
   return function (req: Request, res: Response, next: NextFunction) {
-    const token = req.header("Authorization");
+    try {
+      const token = req.header("Authorization");
 
-    if (!token) {
-      throw ClientError.unAuth();
+      if (!token) {
+        throw ClientError.unAuth()
+      }
+      console.log('before')
+      const { role } = JWT.getPayLoad(token);
+      console.log('after')
+      const UserHasPermission = role === requiredRole;
+
+      if (!UserHasPermission) {
+        throw ClientError.noPermission()
+      }
+      next();
+    } catch (err) {
+      next(err)
     }
-
-    const { role } = JWT.getPayLoad(token);
-    const UserHasPermission = role === requiredRole;
-
-    if (!UserHasPermission) {
-      throw ClientError.noPermission();
-    }
-    
-    next();
   };
 };

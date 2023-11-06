@@ -47,10 +47,18 @@ class ConflictValidator {
       next(err);
     }
   }
-  
-  //   login = [ExpressValidator.username(),ExpressValidator.password()]
-  //   registration = [ExpressValidator.username(),ExpressValidator.password(), ExpressValidator.email()]
-  //   update = [ExpressValidator.oneOfField('username','email'), ExpressValidator.ifUserNameNotEmpty(), ExpressValidator.ifEmailNotEmpty()]
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id, username, email } = req.body;
+      const user = await db.selectUserByID(id);
+      if (user.username === username && user.email === email) {
+        throw ClientError.conflict();
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 export default new ConflictValidator();

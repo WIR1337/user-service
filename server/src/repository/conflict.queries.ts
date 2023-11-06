@@ -9,6 +9,12 @@ class DB {
     });
     return response;
   }
+  async selectUserByID(id: number) {
+    const response = prisma.users.findFirstOrThrow({
+      where: { id },
+    });
+    return response;
+  }
 }
 
 export default new DB();

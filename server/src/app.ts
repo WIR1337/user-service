@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express from "express";
+import { ErrorHandler } from './middleware/ErrorHandler.js';
 
 import api from "./routes/api.router.js";
 import auth from "./routes/auth.router.js";
@@ -12,9 +13,5 @@ app.use(express.json());
 app.use("/auth", auth);
 app.use("/api", api);
 
-
-/*
-middleware with ErrorHandling
 app.use(ErrorHandler)
-*/
 

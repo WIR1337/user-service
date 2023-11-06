@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
+import { ClientError } from "../utils/ClientErrors";
 import ExpressValidator from "./ValidationRules";
 
 class BodyValidator {
@@ -7,13 +8,15 @@ class BodyValidator {
   registration = [ExpressValidator.username(),ExpressValidator.password(), ExpressValidator.email()]
   update = [ExpressValidator.oneOfField('username','email'), ExpressValidator.ifUserNameNotEmpty(), ExpressValidator.ifEmailNotEmpty()]
 
-  result(req: Request,res:Response) {
+  result(req: Request,res:Response,next:NextFunction) {
     const errors = validationResult(req);
-    var messages = [];
+
     if (!errors.isEmpty()) {
-      messages = errors.array().map((error) => error.msg);
+      console.log('validation', errors.array().map((error) => error.msg))
+      let errMsgs = errors.array().map((error) => error.msg);
+      throw ClientError.badRequest(errMsgs)
     }
-    return messages;
+    next()
   }
   
 }

@@ -2,7 +2,7 @@ import { body, oneOf } from "express-validator";
 
 type Field = "username" | "password" | "email";
 
-class ExpressValidator {
+class BodyRules {
   id() {
     return body("id", "id is required")
       .notEmpty()
@@ -55,6 +55,7 @@ class ExpressValidator {
       .isEmail()
       .withMessage("Invalid email format");
   }
+  
 }
 
-export default new ExpressValidator();
+export default new BodyRules();

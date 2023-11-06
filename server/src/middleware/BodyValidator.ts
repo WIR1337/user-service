@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { ClientError } from "../utils/ErrorGenerator.utils";
-import ExpressValidator from "../utils/ValidationRules.utils";
+import BodyRules from "../utils/ValidationBodyRules.utils";
 
 class BodyValidator {
-  login = [ExpressValidator.username(),ExpressValidator.password()]
-  registration = [ExpressValidator.username(),ExpressValidator.password(), ExpressValidator.email()]
-  update = [ExpressValidator.id(),ExpressValidator.oneOfField('username','email'), ExpressValidator.ifUserNameNotEmpty(), ExpressValidator.ifEmailNotEmpty()]
+  login = [BodyRules.username(),BodyRules.password()]
+  registration = [BodyRules.username(),BodyRules.password(), BodyRules.email()]
+  update = [BodyRules.id(),BodyRules.oneOfField('username','email'), BodyRules.ifUserNameNotEmpty(), BodyRules.ifEmailNotEmpty()]
 
   result(req: Request,res:Response,next:NextFunction) {
     const errors = validationResult(req);

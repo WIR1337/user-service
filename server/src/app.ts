@@ -13,5 +13,8 @@ app.use(express.json());
 app.use("/auth", auth);
 app.use("/api", api);
 
+//create new router 
+// app.use("/actions", acitons);
+
 app.use(ErrorHandler)
 

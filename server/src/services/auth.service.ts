@@ -1,4 +1,4 @@
-import db from "../database/queries.js";
+import db from "../repository/auth.queries.js";
 import crypto from "../utils/bcrypt.utils..js";
 import JWT from '../utils/jwt.utils.js';
 

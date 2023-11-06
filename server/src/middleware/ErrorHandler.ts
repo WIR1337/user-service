@@ -1,4 +1,4 @@
-import { ClientError } from "../utils/ClientErrors"
+import { ClientError } from "../utils/ErrorGenerator.utils"
 export const ErrorHandler = (err, req, res, next) => {
 	if (err instanceof ClientError){
         return res.status(err.status).json({message: err.message, errors:err.errors})

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
-import { ClientError } from "../utils/ClientErrors";
-import ExpressValidator from "./ValidationRules";
+import { ClientError } from "../utils/ErrorGenerator.utils";
+import ExpressValidator from "../utils/ValidationRules.utils";
 
 class BodyValidator {
   login = [ExpressValidator.username(),ExpressValidator.password()]

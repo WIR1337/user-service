@@ -1,4 +1,4 @@
-import db from "../database/queries.js";
+import db from "../repository/admin.queries.js";
 import crypto from "../utils/bcrypt.utils..js";
 class ApiService {
   async users() {

@@ -6,7 +6,7 @@ class AuthController {
 
     // const errors = BodyValidator.result(req);
     // if (errors[0]) {
-      // return res.status(400).json({ errors });
+    // return res.status(400).json({ errors });
     // }
 
     const { username, password } = req.body;
@@ -27,7 +27,7 @@ class AuthController {
     // this is part of validation
     // const errors = BodyValidator.result(req);
     // if (errors[0]) {
-      // return res.status(400).json({ errors });
+    // return res.status(400).json({ errors });
     // }
 
     const { username, email, password } = req.body;
@@ -38,11 +38,9 @@ class AuthController {
       res.status(201).json(token);
     } catch (err: any) {
       if (err.message == "User already exist") {
-        return res
-          .status(409)
-          .json({message: err.message});
+        return res.status(409).json({ message: err.message });
       }
-      res.status(500).json({message: err.message});
+      res.status(500).json({ message: err.message });
     }
   }
 }

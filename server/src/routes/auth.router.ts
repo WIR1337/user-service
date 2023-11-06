@@ -4,7 +4,7 @@ import BodyValidator from "../middleware/BodyValidator.js";
 
 const router = Router();
 
-router.post("/login", BodyValidator.login(), AuthController.login);
-router.post("/registration", BodyValidator.registration(),AuthController.registration);
+router.post("/login", BodyValidator.login, AuthController.login);
+router.post("/registration", BodyValidator.registration ,AuthController.registration);
 
 export default router;

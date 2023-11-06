@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 class DB {
   async selectHashedPassword(username: string) {
-    const response = prisma.users.findFirstOrThrow({
+    const response = prisma.users.findFirst({
       where: { username },
       select: { password: true },
     });
@@ -22,7 +22,7 @@ class DB {
     return response;
   }
   async selectUserByID(id: number) {
-    const response = prisma.users.findFirstOrThrow({
+    const response = prisma.users.findFirst({
       where: { id },
     });
     return response;

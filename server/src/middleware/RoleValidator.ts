@@ -11,9 +11,7 @@ export const validateRole = (requiredRole: role) => {
       if (!token) {
         throw ClientError.unAuth()
       }
-      console.log('before')
       const { role } = JWT.getPayLoad(token);
-      console.log('after')
       const UserHasPermission = role === requiredRole;
 
       if (!UserHasPermission) {

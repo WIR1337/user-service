@@ -10,7 +10,7 @@ class DB {
     return response;
   }
   async selectUserByID(id: number) {
-    const response = prisma.users.findFirstOrThrow({
+    const response = prisma.users.findFirst({
       where: { id },
     });
     return response;

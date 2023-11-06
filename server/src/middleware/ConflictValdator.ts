@@ -50,6 +50,7 @@ class ConflictValidator {
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id, username, email } = req.body;
+      
       const user = await db.selectUserByID(id);
       if (user.username === username && user.email === email) {
         throw ClientError.conflict();

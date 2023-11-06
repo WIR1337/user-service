@@ -6,7 +6,7 @@ import ExpressValidator from "../utils/ValidationRules.utils";
 class BodyValidator {
   login = [ExpressValidator.username(),ExpressValidator.password()]
   registration = [ExpressValidator.username(),ExpressValidator.password(), ExpressValidator.email()]
-  update = [ExpressValidator.oneOfField('username','email'), ExpressValidator.ifUserNameNotEmpty(), ExpressValidator.ifEmailNotEmpty()]
+  update = [ExpressValidator.id(),ExpressValidator.oneOfField('username','email'), ExpressValidator.ifUserNameNotEmpty(), ExpressValidator.ifEmailNotEmpty()]
 
   result(req: Request,res:Response,next:NextFunction) {
     const errors = validationResult(req);

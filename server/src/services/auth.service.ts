@@ -10,15 +10,9 @@ class AuthService {
     return { token };
   }
   async registration(username: string, email: string, password: string) {
-    // this is part of validation
-    // const user = await db.selectUserByName(username);
-    // if (user) {
-      // throw new Error("User already exist");
-    // }
-
-    const hashedPassword = crypto.createHash(password);
     const role = "admin";
 
+    const hashedPassword = crypto.createHash(password);
     const created_user = await db.insertUser(username,email,hashedPassword,role);
     const token = JWT.generateAccessToken(created_user.username, created_user.id, created_user.role);
 

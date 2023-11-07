@@ -1,8 +1,9 @@
+import db from '../repository/admin.queries';
+
 class ActionsService {
-  async get() {
-    // const users = await db.selectUsers();
-    // return users;
-    return {a:1}
+  async get(page:number,perpage:number) {
+    const actions = await db.selectActioins(page,perpage)
+    return actions
   }
 }
 

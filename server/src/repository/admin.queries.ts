@@ -62,7 +62,25 @@ class DB {
     email: string | undefined
   ) {
     const data = generateEditingQuery(name, email);
-    const response = await prisma.users.update({ where: { id }, data });
+    const response = prisma.users.update({ where: { id }, data });
+    return response;
+  }
+  async selectActioins(page: number, perpage: number) {
+    
+    const startIndex = (page - 1) * perpage;
+
+    const response = prisma.users_actions.findMany({
+      skip: startIndex,
+      take: perpage,
+      orderBy: {user_id:'asc'},
+      include: {
+        users: {
+          select: {
+            username: true
+          }
+        }
+      }
+    });
     return response;
   }
 }

@@ -89,10 +89,7 @@ const Authorization: FC<AuthProps> = ({ token, setToken }) => {
       setError("An error occurred while registering.");
     }
   };
-  const removeToken = async () => {
-    localStorage.removeItem("Bearer");
-    setToken("");
-  };
+
   return (
     <div>
       <div>
@@ -134,12 +131,7 @@ const Authorization: FC<AuthProps> = ({ token, setToken }) => {
         <button onClick={handleRegistration}>Register</button>
       </div>
 
-      {token && (
-        <div style={{ width: "600px", wordWrap: "break-word" }}>
-          Token: {token}
-        </div>
-      )}
-      {token && <button onClick={removeToken}>Remove token</button>}
+      
       {currentToken && (
         <p style={{ width: "600px" }}>CurrentToken: {currentToken}</p>
       )}

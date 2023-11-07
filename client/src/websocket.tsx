@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
-export function useWebSocket() {
+export function useWebSocket(token:string,) {
   const [serviceStatus, setServiceStatus] = useState("");
   var socket: Socket;
   var socketRef = useRef<Socket>();

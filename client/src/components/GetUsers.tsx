@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
+import { getUsers } from "../fetch/api";
 import { Setter, User } from "../types/components";
-
 interface GetProps {
   token: string;
   setUsers: Setter<User[]>;
@@ -10,14 +10,7 @@ const GetUsers: FC<GetProps> = ({ token, setUsers }) => {
 
   const handleGetUsers = async () => {
     try {
-      const response = await fetch("/api/users", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-
+      const response = await getUsers(token)
       if (response.ok) {
         const responseData = await response.json();
         setUsers(responseData);

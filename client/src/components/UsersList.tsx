@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { update } from "../fetch/api";
 import { Setter, User } from "../types/components";
 import { createTimestamp } from "../utils/event.utils";
 interface UsersListProps {
@@ -62,14 +63,7 @@ const UsersList: FC<UsersListProps> = ({
       
   
       try {
-        const response = await fetch(`/api/edit/`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify(body),
-        });
+        const response = await update(token,body)
   
         if (response.ok) {
           const {message,id} = await response.json();

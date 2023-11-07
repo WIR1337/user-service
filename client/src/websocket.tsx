@@ -23,7 +23,7 @@ export function useWebSocket(token:string,) {
       console.log("DSADAS " + JSON.stringify(msg));
     });
     socket.on("error", (msg) => {
-      console.log("Error : " + JSON.stringify(msg));
+      console.log("Socket Said Error : " + JSON.stringify(msg));
     });
 
     return () => {

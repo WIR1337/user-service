@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { login, registration } from "../fetch/api";
 import { Setter } from "../types/components";
 
 interface AuthProps {
@@ -33,16 +34,8 @@ const Authorization: FC<AuthProps> = ({ token, setToken }) => {
   }
   const handleLogin = async () => {
     try {
-      const response = await fetch("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: loginUsername,
-          password: loginPassword,
-        }),
-      });
+
+      const response = await login(loginUsername,loginPassword)
 
       if (response.ok) {
         const data = await response.json();
@@ -61,19 +54,8 @@ const Authorization: FC<AuthProps> = ({ token, setToken }) => {
   };
 
   const handleRegistration = async () => {
-    console.log({ regUsername, regPassword });
     try {
-      const response = await fetch("/auth/registration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: regUsername,
-          email: regEmail,
-          password: regPassword,
-        }),
-      });
+     const response = await registration(regUsername,regEmail,regPassword)
 
       if (response.ok) {
         const data = await response.json();

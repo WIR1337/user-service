@@ -2,7 +2,7 @@ import { NextFunction } from "express";
 import { Socket } from "socket.io";
 import { role } from "../types/user.js";
 import JWT from "../utils/jwt.utils.js";
-import { SocketError } from "./Errors";
+import { SocketError } from "./Errors.js";
 
 export const validateRole = (requiredRole: role) => {
   return function (socket: Socket, next: NextFunction) {

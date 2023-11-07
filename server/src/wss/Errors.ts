@@ -5,7 +5,7 @@ export class SocketError {
     this.message = message;
   }
 
-  static badRequest(errors = []) {
+  static badRequest() {
     return new SocketError("Bad Request");
   }
   static unAuth() {

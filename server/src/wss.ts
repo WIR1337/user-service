@@ -1,8 +1,8 @@
 import http from "http";
 import { Server } from "socket.io";
-import { SocketError } from "./sockethelpers/Errors";
-import { validateRole } from "./sockethelpers/SocketRoleAuth";
-import { validMessage } from "./sockethelpers/ValidateMessage";
+import { SocketError } from "./wss/Errors";
+import { validMessage } from "./wss/MessageValidator";
+import { validateRole } from "./wss/SocketAuth";
 
 class WebSocketServer {
   private io: Server;
@@ -18,9 +18,11 @@ class WebSocketServer {
         }
       });
     });
-
+    
     this.io.use(validateRole("admin"));
   }
+
+
 }
 
 export default WebSocketServer;

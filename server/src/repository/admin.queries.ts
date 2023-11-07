@@ -83,6 +83,14 @@ class DB {
     });
     return response;
   }
+  async selectAmountActions() {
+    const amount = await prisma.users_actions.aggregate({
+      _max: {
+        id: true,
+      },
+    });
+    return amount
+  }
 }
 
 export default new DB();

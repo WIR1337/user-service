@@ -2,6 +2,7 @@ import { NextFunction } from "express";
 import { Socket } from "socket.io";
 import { role } from "../types/user.js";
 import JWT from "../utils/jwt.utils.js";
+import { SocketError } from "./Errors";
 
 export const validateRole = (requiredRole: role) => {
   return function (socket: Socket, next: NextFunction) {
@@ -9,16 +10,16 @@ export const validateRole = (requiredRole: role) => {
       const { token } = socket.handshake.auth;
 
       if (!token) {
-        throw new Error("Token required");
+        throw SocketError.unAuth()
       }
+      
       const { role } = JWT.getPayLoad(token);
       const UserHasPermission = role === requiredRole;
 
       if (!UserHasPermission) {
-        throw new Error("No permission");
+        throw SocketError.noPermission()
       }
 
-      console.log(socket.handshake.auth);
       next();
     } catch (err) {
       next(err);

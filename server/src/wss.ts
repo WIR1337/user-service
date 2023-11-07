@@ -1,7 +1,7 @@
 import http from "http";
 import { Server } from "socket.io";
 
-import { validateRole } from "./socketmiddleware/SocketRoleAuth";
+import { validateRole } from "./sockethelpers/SocketRoleAuth";
 
 class WebSocketServer {
   private io: Server;
@@ -9,10 +9,14 @@ class WebSocketServer {
     this.io = new Server(httpServer);
 
     this.io.on("connection", (socket) => {
-      console.log("new connection");
+      socket.on("message", (msg) => {
+        console.log("message: " + msg);
+        // this.io.emit('hello','world'); 
+        socket.broadcast.emit('hello','world');
+      });
     });
 
-    this.io.use(validateRole('admin'));
+    this.io.use(validateRole("admin"));
   }
 }
 

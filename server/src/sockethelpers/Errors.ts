@@ -14,12 +14,6 @@ export class SocketError {
   static noPermission() {
     return new SocketError("Forbidden");
   }
-  static notFound() {
-    return new SocketError("Not Found");
-  }
-  static conflict() {
-    return new SocketError("Conflict");
-  }
 }
 
 

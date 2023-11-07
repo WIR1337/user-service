@@ -1,7 +1,8 @@
 import http from "http";
 import { Server } from "socket.io";
-
+import { SocketError } from "./sockethelpers/Errors";
 import { validateRole } from "./sockethelpers/SocketRoleAuth";
+import { validMessage } from "./sockethelpers/ValidateMessage";
 
 class WebSocketServer {
   private io: Server;
@@ -10,9 +11,11 @@ class WebSocketServer {
 
     this.io.on("connection", (socket) => {
       socket.on("message", (msg) => {
-        console.log("message: " + msg);
-        // this.io.emit('hello','world'); 
-        socket.broadcast.emit('hello','world');
+        if (validMessage(msg)) {
+          socket.broadcast.emit("message", msg);
+        } else {
+          socket.emit('error', SocketError.badRequest()) 
+        }
       });
     });
 

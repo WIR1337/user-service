@@ -66,7 +66,6 @@ class ConflictValidator {
       const {user_id} = req.query;
       if(!user_id) return next()
       const user = await db.selectUserByID_inActions(Number(user_id));
-      console.log({user})
       if (!user) {
         throw ClientError.notFound();
       }

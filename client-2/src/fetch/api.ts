@@ -26,8 +26,8 @@ export async function registration(regUsername:string, regEmail:string, regPassw
   });
   return response
 }
-export async function getActions() {
-    const response = fetch("/actions?page=1&perpage=5", {
+export async function getActions(page:number,perpage:number,user_id?:number) {
+    const response = fetch(`/actions?page=${page}&perpage=${perpage}&user_id=${user_id ? user_id : ''}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

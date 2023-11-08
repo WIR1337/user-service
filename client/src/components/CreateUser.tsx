@@ -1,14 +1,14 @@
 import { FC, useState } from "react";
 import { create } from "../fetch/api";
 import { createTimestamp } from "../utils/event.utils";
-const generateMessage = (id: number, user_id: number, username: string) => {
+const generateMessage = (id: number, username: string,user_id: number) => {
   return {
     id,
     user_id,
     username,
     action_type: "create",
     action_data: { message: "User is created" },
-    actions_time: createTimestamp(),
+    action_time: createTimestamp(),
   };
 };
 
@@ -27,10 +27,8 @@ const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
       const res = await create(token, username, email, password);
       
       if (res.ok) {
-
         const { action_id, created_user } = await res.json();
-
-        socketSend(generateMessage(action_id, created_user.username,created_user.user_id));
+        socketSend(generateMessage(action_id, created_user.username,created_user.id));
         setError("");
       } else {
         const responseData = await res.json();

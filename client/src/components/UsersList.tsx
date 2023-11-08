@@ -53,7 +53,7 @@ const UsersList: FC<UsersListProps> = ({
         : "";
       let chunk_2 = email ? `Email changed from ${initialEmail} to ${email}` : "";
   
-      return {id:action_id,user_id:id,action_type: 'update',action_data: { message: `${chunk_1} ${chunk_2}` },action_time: createTimestamp()};
+      return {id:action_id,user_id:id, username, action_type: 'update',action_data: { message: `${chunk_1} ${chunk_2}` },action_time: createTimestamp()};
     };
     const handleSaveUser = async (user: User) => {
       if (initialUsername == user.username && initialEmail == user.email) {
@@ -66,11 +66,9 @@ const UsersList: FC<UsersListProps> = ({
         const response = await update(token,body)
   
         if (response.ok) {
-          const {message,id} = await response.json();
-          const sendingData = generateMessage(id,body);
-          console.log(socketSend)
+          const {action_id,updatedUser} = await response.json();
+          const sendingData = generateMessage(action_id,updatedUser);
           socketSend(sendingData);
-          setResult(message);
           clearRes();
           setSelected(-1);
         } else {

@@ -3,20 +3,36 @@ node_modules
 NOTES.md
 
 # /client
-client/node_modules
-client/.pnp
-client/.pnp.js
-client/coverage
-client/build
-client/.DS_Store
-client/.env.local
-client/.env.development.local
-client/.env.test.local
-client/.env.production.local
-client/npm-debug.log*
-client/yarn-debug.log*
-client/yarn-error.log*
-client/.env
+client-1/node_modules
+client-1/.pnp
+client-1/.pnp.js
+client-1/coverage
+client-1/build
+client-1/.DS_Store
+client-1/.env.local
+client-1/.env.development.local
+client-1/.env.test.local
+client-1/.env.production.local
+client-1/npm-debug.log*
+client-1/yarn-debug.log*
+client-1/yarn-error.log*
+client-1/.env
+
+# /client-2
+client-2/node_modules
+client-2/.pnp
+client-2/.pnp.js
+client-2/coverage
+client-2/build
+client-2/.DS_Store
+client-2/.env.local
+client-2/.env.development.local
+client-2/.env.test.local
+client-2/.env.production.local
+client-2/npm-debug.log*
+client-2/yarn-debug.log*
+client-2/yarn-error.log*
+client-2/.env
 
 # /server
 server/node_modules

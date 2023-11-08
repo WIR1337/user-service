@@ -4,7 +4,7 @@ import { ClientError } from "../utils/ErrorGenerator.utils";
 import QueryRules from "../utils/ValidationQueryRules.utils";
 
 class QueryValidator {
-  get = [QueryRules.page(),QueryRules.perpage()];
+  get = [QueryRules.page(),QueryRules.perpage(), QueryRules.user_id()];
 
   result(req: Request, res: Response, next: NextFunction) {
     const errors = validationResult(req);

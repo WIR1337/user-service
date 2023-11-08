@@ -65,31 +65,32 @@ class DB {
     const response = prisma.users.update({ where: { id }, data });
     return response;
   }
-  async selectActioins(page: number, perpage: number) {
-    
+  async selectActioins(page: number, perpage: number, user_id: number) {
     const startIndex = (page - 1) * perpage;
 
     const response = prisma.users_actions.findMany({
+      where: { user_id },
       skip: startIndex,
       take: perpage,
-      orderBy: [{user_id:'asc'},{id:'asc'}],
+      orderBy: [{ user_id: "asc" }, { id: "asc" }],
       include: {
         users: {
           select: {
-            username: true
-          }
-        }
-      }
+            username: true,
+          },
+        },
+      },
     });
     return response;
   }
-  async selectAmountActions() {
+  async selectAmountActions(user_id: number) {
     const amount = await prisma.users_actions.aggregate({
+      where: { user_id },
       _max: {
         id: true,
       },
     });
-    return amount
+    return amount;
   }
 }
 

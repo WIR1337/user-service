@@ -47,6 +47,7 @@ class ConflictValidator {
       next(err);
     }
   }
+  
   async update(req: Request, res: Response, next: NextFunction) {
     try {
       const { id, username, email } = req.body;
@@ -55,6 +56,21 @@ class ConflictValidator {
       if (user.username === username && user.email === email) {
         throw ClientError.conflict();
       }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
+  async get(req: Request, res: Response, next: NextFunction) {
+    try {
+      const {user_id} = req.query;
+      if(!user_id) return next()
+      const user = await db.selectUserByID_inActions(Number(user_id));
+      console.log({user})
+      if (!user) {
+        throw ClientError.notFound();
+      }
+      
       next();
     } catch (err) {
       next(err);

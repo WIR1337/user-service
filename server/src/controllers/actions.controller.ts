@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import ActionsService from "../services/actions.service";
 class ActionsController {
   async get(req: Request, res: Response) {
-    const {page, perpage} = req.query
+    const {page, perpage,user_id} = req.query
 
-    const users = await ActionsService.get(Number(page),Number(perpage));
+    //  i need to fix this mess
+    const validUserId = user_id ? Number(user_id) : undefined
+    const users = await ActionsService.get(Number(page),Number(perpage), validUserId);
     res.status(200).json(users);
   }
 }

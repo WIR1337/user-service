@@ -15,6 +15,12 @@ class DB {
     });
     return response;
   }
+  async selectUserByID_inActions(user_id: number) {
+    const response = prisma.users_actions.findFirst({
+      where: { user_id },
+    });
+    return response;
+  }
 }
 
 export default new DB();

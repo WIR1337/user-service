@@ -28,9 +28,7 @@ export async function registration(regUsername:string, regEmail:string, regPassw
 }
 
 export async function create(token:string,username:string,email:string,password:string) {
-  console.log('data ')
-  console.log({token,username,email,password})
-  const response =  fetch("api/create", {
+  const response = fetch("api/create", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,10 +1,11 @@
 import { FC, useState } from "react";
 import { create } from "../fetch/api";
 import { createTimestamp } from "../utils/event.utils";
-const generateMessage = (id: number, user_id: number) => {
+const generateMessage = (id: number, user_id: number, username: string) => {
   return {
     id,
     user_id,
+    username,
     action_type: "create",
     action_data: { message: "User is created" },
     actions_time: createTimestamp(),
@@ -24,11 +25,12 @@ const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
   const handleCreateUser = async () => {
     try {
       const res = await create(token, username, email, password);
+      
       if (res.ok) {
-        const { message, id, user_id } = await res.json();
 
-        socketSend(generateMessage(id, user_id));
-        setResponse(message);
+        const { action_id, created_user } = await res.json();
+
+        socketSend(generateMessage(action_id, created_user.username,created_user.user_id));
         setError("");
       } else {
         const responseData = await res.json();
@@ -64,7 +66,6 @@ const CreateUser: FC<{ token: string; socketSend: (message: any) => void }> = ({
       <button onClick={handleCreateUser}>Create User</button>
 
       <div>
-        {response && <p>Response: {JSON.stringify(response)}</p>}
         {error && <p>Error: {JSON.stringify(error)}</p>}
       </div>
     </div>

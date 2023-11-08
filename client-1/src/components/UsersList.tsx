@@ -48,10 +48,10 @@ const UsersList: FC<UsersListProps> = ({
     }) => {
       const { id ,username, email } = params;
   
-      let chunk_1 = username
+      let chunk_1 = username != initialUsername
         ? `Name changed from ${initialUsername} to ${username}`
         : "";
-      let chunk_2 = email ? `Email changed from ${initialEmail} to ${email}` : "";
+      let chunk_2 = email != initialEmail ? `Email changed from ${initialEmail} to ${email}` : "";
   
       return {id:action_id,user_id:id, username, action_type: 'update',action_data: { message: `${chunk_1} ${chunk_2}` },action_time: createTimestamp()};
     };

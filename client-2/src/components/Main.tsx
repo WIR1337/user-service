@@ -1,16 +1,18 @@
 import { FC } from "react";
 import { Setter } from "../types/components";
+import { useWebSocket } from "../weboscket";
 import GetActions from "./GetActions";
 
 interface MainProps {
-    token:string
-    tokenSetter: Setter<string>
+  token: string;
+  tokenSetter: Setter<string>;
 }
-const Main:FC<MainProps> = ({token,tokenSetter}) => {
-    const removeToken = async () => {
-        localStorage.removeItem("Bearer");
-        tokenSetter("");
-      };
+const Main: FC<MainProps> = ({ token, tokenSetter }) => {
+  const { sendMessage } = useWebSocket(token);
+  const removeToken = async () => {
+    localStorage.removeItem("Bearer");
+    tokenSetter("");
+  };
   return (
     <div>
       <div style={{ width: "600px", wordWrap: "break-word" }}>

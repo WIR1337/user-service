@@ -1,8 +1,10 @@
-
+import GetActions from "./components/GetActions"
 
 const App = () => {
   return (
-    <div>App</div>
+    <div>
+      <GetActions></GetActions> 
+    </div>
   )
 }
 

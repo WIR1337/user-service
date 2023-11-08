@@ -72,7 +72,7 @@ class DB {
     const response = prisma.users_actions.findMany({
       skip: startIndex,
       take: perpage,
-      orderBy: {user_id:'asc'},
+      orderBy: [{user_id:'asc'},{id:'asc'}],
       include: {
         users: {
           select: {

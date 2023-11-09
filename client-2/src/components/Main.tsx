@@ -6,6 +6,7 @@ import { useWebSocket } from "../weboscket";
 import Filter from "./Filter";
 import Pages from "./Pages";
 import RemoveToken from "./RemoveToken";
+import SocketMessges from "./SocketMessges";
 import Table from "./Table";
 
 interface MainProps {
@@ -13,7 +14,8 @@ interface MainProps {
   tokenSetter: Setter<string>;
 }
 const Main: FC<MainProps> = ({ token, tokenSetter }) => {
-
+  
+  const [socketMessages,setSocketMessages] = useState<Action[]>([])
   const [actions, setActions] = useState<ActionsWithPage[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number>();
@@ -22,7 +24,7 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
   const perpage = 10;
 
 
-  useWebSocket(token);
+  useWebSocket(token,setSocketMessages);
 
   async function fetchActions(page: number, perpage: number, user_id?: number) {
     const pageYetLoaded = actions.some(actByPage => actByPage.page === page)
@@ -47,6 +49,7 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
       <Filter setCurrentPage={setPage} setUserId={setUserId} setActions={setActions}></Filter>
       <Table actions={actions.find(actByPage => actByPage.page === page)?.actions as Action[]}></Table>
       <Pages currentPage={page} totalPages={totalPages as number} setPage={setPage}></Pages>
+      <SocketMessges socketMessages={socketMessages}></SocketMessges>
     </div>
   );
 };

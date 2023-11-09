@@ -9,3 +9,4 @@ export interface User {
     role: "admin" | "user";
     created_at: string;
   }
+

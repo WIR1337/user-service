@@ -24,13 +24,15 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
   const perpage = 10;
 
   async function fetchActions(page: number, perpage: number, user_id?: number) {
+    const pageYetLoaded = actions.some(actByPage => actByPage.page === page)
+    if(pageYetLoaded) return
+
     const response = await getActions(page, perpage, user_id);
-    const { actions, amountOfActions } = await response.json();
+    const  data = await response.json();
 
-    setActions((prev) => [...prev, { page, actions }]);
-    setTotalActions(amountOfActions._max.id);
+    setActions((prev) => [...prev, { page, actions:data.actions }]);
+    setTotalActions(data.amountOfActions._max.id);
 
-    console.log(actions, amountOfActions);
   }
 
   useEffect(() => {

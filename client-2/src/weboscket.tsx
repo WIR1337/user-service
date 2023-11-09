@@ -30,7 +30,6 @@ export function useWebSocket(token: string) {
     };
   }, []);
   function sendMessage(message: any) {
-    console.log("SENDED MESSAGE :", message);
     if (socketRef.current) {
       socketRef.current.send(JSON.stringify(message));
     }

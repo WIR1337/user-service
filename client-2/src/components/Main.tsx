@@ -8,40 +8,42 @@ import Pages from "./Pages";
 import RemoveToken from "./RemoveToken";
 import Table from "./Table";
 
-
 interface MainProps {
   token: string;
   tokenSetter: Setter<string>;
 }
 const Main: FC<MainProps> = ({ token, tokenSetter }) => {
-  
   useWebSocket(token);
 
-  const [actions,setActions] = useState<Action[]>([])
-  const [page,setPage] = useState(1)
-  const [totalActions,setTotalActions] = useState<number>()
-  const [totalPages, setTotalPages] = useState<number>()
-  const [userId, setUserId] = useState<number>()
+  const [actions, setActions] = useState<Action[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalActions, setTotalActions] = useState<number>();
+  const [totalPages, setTotalPages] = useState<number>();
+  const [userId, setUserId] = useState<number>();
 
+  const perpage = 10;
 
-  const perpage = 10
-
-
-  async function fetchActions(page:number,perpage:number,user_id?:number) {
+  async function fetchActions(page: number, perpage: number, user_id?: number) {
     const response = await getActions(page, perpage, user_id);
 
-    console.log(await response.json());
+    const { actions, amountOfActions } = await response.json();
+    setActions(prev => [...prev, ...actions])
+    setTotalActions(amountOfActions._max.id)
+
+    console.log(actions,amountOfActions)
   }
 
+
   useEffect(() => {
-    fetchActions(page,perpage,userId)
-  },[page])
+    fetchActions(page, perpage, userId);
+  }, [page]);
+
 
   return (
     <div>
       <RemoveToken token={token} tokenSetter={tokenSetter}></RemoveToken>
       <Filter></Filter>
-      <Table></Table>
+      <Table actions={actions}></Table>
       <Pages></Pages>
     </div>
   );

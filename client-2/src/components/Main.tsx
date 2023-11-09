@@ -13,15 +13,16 @@ interface MainProps {
   tokenSetter: Setter<string>;
 }
 const Main: FC<MainProps> = ({ token, tokenSetter }) => {
-  useWebSocket(token);
 
   const [actions, setActions] = useState<ActionsWithPage[]>([]);
   const [page, setPage] = useState(1);
-  const [totalActions, setTotalActions] = useState<number>();
   const [totalPages, setTotalPages] = useState<number>();
   const [userId, setUserId] = useState<number>();
 
   const perpage = 10;
+
+
+  useWebSocket(token);
 
   async function fetchActions(page: number, perpage: number, user_id?: number) {
     const pageYetLoaded = actions.some(actByPage => actByPage.page === page)
@@ -31,12 +32,11 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
     const  data = await response.json();
 
     setActions((prev) => [...prev, { page, actions:data.actions }]);
-    setTotalActions(data.amountOfActions._max.id);
+    setTotalPages(Math.ceil(data.amountOfActions._max.id / perpage))
 
   }
 
   useEffect(() => {
-
     fetchActions(page, perpage, userId);
   }, [page]);
 
@@ -45,7 +45,7 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
       <RemoveToken token={token} tokenSetter={tokenSetter}></RemoveToken>
       <Filter></Filter>
       <Table actions={actions.find(actByPage => actByPage.page === page)?.actions as Action[]}></Table>
-      <Pages></Pages>
+      <Pages currentPage={page} totalPages={totalPages as number} setPage={setPage}></Pages>
     </div>
   );
 };

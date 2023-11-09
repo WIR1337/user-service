@@ -31,6 +31,7 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
     const response = await getActions(page, perpage, user_id);
     const  data = await response.json();
 
+    if (!data.actions) return
     setActions((prev) => [...prev, { page, actions:data.actions }]);
     setTotalPages(Math.ceil(data.amountOfActions._max.id / perpage))
 
@@ -38,12 +39,12 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
 
   useEffect(() => {
     fetchActions(page, perpage, userId);
-  }, [page]);
+  }, [page,userId]);
 
   return (
     <div>
       <RemoveToken token={token} tokenSetter={tokenSetter}></RemoveToken>
-      <Filter></Filter>
+      <Filter setCurrentPage={setPage} setUserId={setUserId} setActions={setActions}></Filter>
       <Table actions={actions.find(actByPage => actByPage.page === page)?.actions as Action[]}></Table>
       <Pages currentPage={page} totalPages={totalPages as number} setPage={setPage}></Pages>
     </div>

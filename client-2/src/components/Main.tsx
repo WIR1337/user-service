@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { getActions } from "../fetch/api";
-import { Action, Setter } from "../types/components";
+import { Action, ActionsWithPage, Setter } from "../types/components";
 import { useWebSocket } from "../weboscket";
 
 import Filter from "./Filter";
@@ -15,7 +15,7 @@ interface MainProps {
 const Main: FC<MainProps> = ({ token, tokenSetter }) => {
   useWebSocket(token);
 
-  const [actions, setActions] = useState<Action[]>([]);
+  const [actions, setActions] = useState<ActionsWithPage[]>([]);
   const [page, setPage] = useState(1);
   const [totalActions, setTotalActions] = useState<number>();
   const [totalPages, setTotalPages] = useState<number>();
@@ -25,25 +25,24 @@ const Main: FC<MainProps> = ({ token, tokenSetter }) => {
 
   async function fetchActions(page: number, perpage: number, user_id?: number) {
     const response = await getActions(page, perpage, user_id);
-
     const { actions, amountOfActions } = await response.json();
-    setActions(prev => [...prev, ...actions])
-    setTotalActions(amountOfActions._max.id)
 
-    console.log(actions,amountOfActions)
+    setActions((prev) => [...prev, { page, actions }]);
+    setTotalActions(amountOfActions._max.id);
+
+    console.log(actions, amountOfActions);
   }
 
-
   useEffect(() => {
+
     fetchActions(page, perpage, userId);
   }, [page]);
-
 
   return (
     <div>
       <RemoveToken token={token} tokenSetter={tokenSetter}></RemoveToken>
       <Filter></Filter>
-      <Table actions={actions}></Table>
+      <Table actions={actions.find(actByPage => actByPage.page === page)?.actions as Action[]}></Table>
       <Pages></Pages>
     </div>
   );

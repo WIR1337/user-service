@@ -16,7 +16,7 @@ const Table: FC<TableProps> = ({ actions }) => {
         </tr>
       </thead>
       <tbody>
-        {actions.map(({id,user_id,users,action_time,action_type,action_data}) => {
+        {actions?.map(({id,user_id,users,action_time,action_type,action_data}) => {
           return (
             <tr key={id}>
               <td>{user_id} </td>

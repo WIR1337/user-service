@@ -10,3 +10,10 @@ export interface Action {
   action_time: string;
   action_data: { message: string };
 }
+
+
+
+export interface ActionsWithPage {
+  page: number
+  actions: Action[]
+}

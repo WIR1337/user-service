@@ -4,6 +4,7 @@ import { SocketError } from "./wss/Errors";
 import { validMessage } from "./wss/MessageValidator";
 import { validateRole } from "./wss/SocketAuth";
 const qwe = require("socket.io");
+
 class WebSocketServer {
   private io: Server;
   constructor(httpServer: http.Server) {

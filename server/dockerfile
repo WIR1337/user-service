@@ -6,12 +6,12 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN prisma generate
-
 COPY . .
 
 ENV PORT=8000
 
 EXPOSE 8000
+
+RUN npx prisma generate
 
 CMD [ "npm","start" ]

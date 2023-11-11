@@ -21,6 +21,13 @@ services:
     ports:
       - "3001:3001"
     container_name: client-1
+  client-2:
+    depends_on:
+      - server
+    image: wir1337/client-2:1.0
+    ports:
+      - "3002:3002"
+    container_name: client-2
 volumes:
   db-data:
     driver: local

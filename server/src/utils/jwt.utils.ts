@@ -1,12 +1,12 @@
 import { config } from "dotenv";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { role } from "../types/user.js";
+// import { role } from "../types/user.js";
 config();
 
 class JWT {
   private secretKey = process.env.SECRET_KEY || "MY_SECRET_KEY";
 
-  public generateAccessToken(name: string, id: number, role: role) {
+  public generateAccessToken(name: string, id: number, role: string) {
     const payload = {
       name,
       id,

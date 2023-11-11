@@ -1,5 +1,7 @@
 # About
-
+server - http + ws server
+client-1 - able to create and update users and send event through the wss
+client-2 - able to get list of all users actions that create client-1 with pagination
 
 ## Run it with Docker
 - Running with docker-compose :

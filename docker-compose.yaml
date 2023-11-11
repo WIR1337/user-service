@@ -1,12 +1,12 @@
 version: '3'
 services:
   postgres:
-    image: 'postgres'
+    image: 'wir1337/my-db:1.0'
     environment: 
       - POSTGRES_PASSWORD=qwe123
     container_name: postgres-db
-    volumes:
-      - db-data:/var/lib/postgresql/data
+    # volumes:
+      # - db-data:/var/lib/postgresql/data
   server:
     depends_on:
       - postgres
@@ -28,6 +28,6 @@ services:
     ports:
       - "3002:3002"
     container_name: client-2
-volumes:
-  db-data:
-    driver: local
+# volumes:
+  # db-data:
+    # driver: local

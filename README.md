@@ -1,48 +1,38 @@
-# Description
-Express server with WebSocket
-
-to be continued ...
-
-## Installation
-- Clone this repo :
-```ssh
-git clone git@github.com:WIR1337/user-service.git
-```
-- Create .env file
-```ssh
-cd user-service
-touch server/.env
-```
-- Set environment variables for Postgres and Prisma in created .env file:
-```ssh
-# set variable for Postgres
-HOST
-PORT
-DATABASE
-USER
-
-# set url to Postgres for prisma client
-# https://www.prisma.io/docs/reference/database-reference/connection-urls
-
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE"
-```
-Create tables :
-
-```ssh
-Comming soon
-```
+# About
 
 
-- Run :
+## Run it with Docker
+- Running with docker-compose :
 ```ssh
-npm install
+version: '3'
+services:
+  postgres:
+    image: 'wir1337/my-db:1.0'
+    environment: 
+      - POSTGRES_PASSWORD=qwe123
+    container_name: postgres-db
+  server:
+    depends_on:
+      - postgres
+    image: wir1337/server:1.0
+    ports:
+      - "8000:8000"
+    container_name: server
+  client-1:
+    depends_on:
+      - server
+    image: wir1337/client-1:1.0
+    ports:
+      - "3001:3001"
+    container_name: client-1
+  client-2:
+    depends_on:
+      - server
+    image: wir1337/client-2:1.0
+    ports:
+      - "3002:3002"
+    container_name: client-2
 ```
-- Then install packages for client and server
-```ssh
-npm run install-all
-```
-- Runs the client in the dev mode on port **3000** and runs the express server on port **8000**
-```ssh
-npm start
-```
-Open app [http://localhost:3000](http://localhost:3000)
+- Then open
+client-1 [http://localhost:3001](http://localhost:3001)
+client-2 [http://localhost:3002](http://localhost:3002)

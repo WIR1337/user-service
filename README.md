@@ -1,9 +1,9 @@
 # About
-server - http + ws server
-client-1 - able to create and update users and send event through the wss
-client-2 - able to get list of all users actions that create client-1 with pagination
+- server - http + ws server
+- client-1 - able to create and update users and send event through the wss
+- client-2 - able to get list of all users actions that create client-1 with pagination
 
-## Run it with Docker
+# Run it with Docker
 - Running with docker-compose :
 ```ssh
 version: '3'
@@ -37,4 +37,4 @@ services:
 ```
 - Then open
 client-1 [http://localhost:3001](http://localhost:3001)
-client-2 [http://localhost:3002](http://localhost:3002)
+and client-2 [http://localhost:3002](http://localhost:3002)
